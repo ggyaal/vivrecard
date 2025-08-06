@@ -1,7 +1,11 @@
 import styled from "styled-components";
-import DiscordLoginButton from "../components/DiscordLoginButton";
+import DiscordLoginButton from "../components/buttons/DiscordLoginButton";
 import { Helmet } from "react-helmet-async";
-import GoogleLoginButton from "../components/GoogleLoginButton";
+import GoogleLoginButton from "../components/buttons/GoogleLoginButton";
+import { useNavigate } from "react-router-dom";
+import useMember from "../hooks/useMember";
+import { useEffect } from "react";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Container = styled.main`
   display: flex;
@@ -31,6 +35,19 @@ const Description = styled.p`
 `;
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { data: member, isLoading } = useMember();
+
+  useEffect(() => {
+    if (!isLoading && member) {
+      navigate("/members/me", { replace: true });
+    }
+  }, [isLoading, member, navigate]);
+
+  if (isLoading || member) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <>
       <Helmet>

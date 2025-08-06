@@ -7,12 +7,12 @@ export const darkTheme: DefaultTheme = {
     secondary: "#7A5A2F",
     sidebar: "#2B2E4A",
     background: "#202020",
-    text: "#FFFFFF",
+    text: "#CCCCCC",
     shadow: "rgba(255, 255, 255, 0.3)",
   },
   discord: {
     background: "#1F1F1F",
-    text: "#FFFFFF",
+    text: "#c8c8c8ff",
   },
   google: {
     background: "#131314",
@@ -27,7 +27,7 @@ export const lightTheme: DefaultTheme = {
     secondary: "#DED3C4",
     sidebar: "#555879",
     background: "#DFDFDF",
-    text: "#000000",
+    text: "#2a2a3b",
     shadow: "rgba(0, 0, 0, 0.3)",
   },
   discord: {

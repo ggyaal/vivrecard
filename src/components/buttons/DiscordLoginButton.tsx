@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { usePopupLogin } from "../hooks/usePopupLogin";
+import usePopupLogin from "../../hooks/usePopupLogin";
 
 const Container = styled.button`
   background-color: ${({ theme }) => theme.discord.background};
@@ -26,19 +26,10 @@ const ButtonText = styled.div`
 `;
 
 const DiscordLoginButton = () => {
-  const { openPopupLogin } = usePopupLogin({
-    popupUrl: `${process.env.REACT_APP_BASE_URL}/popup/login/discord`,
-    onSuccess: (data) => {
-      console.log("Login successful:", data);
-    },
-    onError: (error) => {
-      console.error("Login failed:", error);
-      alert("로그인에 실패했습니다. 다시 시도해주세요.");
-    },
-  });
+  const { handleLogin } = usePopupLogin("discord");
 
   return (
-    <Container onClick={openPopupLogin}>
+    <Container onClick={handleLogin}>
       <ButtonText></ButtonText>
     </Container>
   );

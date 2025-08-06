@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import usePopupLogin from "../../hooks/usePopupLogin";
 
 const Container = styled.button`
   background-color: ${({ theme }) => theme.google.background};
@@ -36,8 +37,10 @@ const Text = styled.span`
 `;
 
 const GoogleLoginButton = () => {
+  const { handleLogin } = usePopupLogin("google");
+
   return (
-    <Container>
+    <Container onClick={handleLogin}>
       <ButtonText></ButtonText>
       <Text>Login with Google</Text>
     </Container>

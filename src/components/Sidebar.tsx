@@ -1,8 +1,15 @@
-import { HiHome, HiOutlineHome, HiSun } from "react-icons/hi";
+import {
+  HiHome,
+  HiOutlineHome,
+  HiSun,
+  HiBookOpen,
+  HiOutlineBookOpen,
+} from "react-icons/hi";
 import { HiMoon } from "react-icons/hi2";
+import { MdLocalMovies, MdOutlineLocalMovies } from "react-icons/md";
 import styled from "styled-components";
-import IconButton from "./IconButton";
-import { Link } from "react-router-dom";
+import IconButton from "./buttons/IconButton";
+import { Link, useLocation } from "react-router-dom";
 
 interface SidebarProps {
   isDark: boolean;
@@ -37,11 +44,11 @@ const MenuItem = styled.div.withConfig({
   padding: 30px 10px;
   color: ${({ theme }) => theme.colors.text};
   justify-self: flex-end;
-  cursor: pointer;
   transition: color 0.3s ease;
 `;
 
 const Sidebar = ({ isDark, toggleTheme }: SidebarProps) => {
+  const location = useLocation();
   const ThemeIcon = isDark ? HiMoon : HiSun;
 
   return (
@@ -52,12 +59,36 @@ const Sidebar = ({ isDark, toggleTheme }: SidebarProps) => {
             icon={HiOutlineHome}
             hoverIcon={HiHome}
             size={28}
-            ariaLabel="Menu"
-            onClick={() => console.log("Menu Clicked")}
+            ariaLabel="Home"
+            onClick={() => console.log("Home Clicked")}
+            disabled={location.pathname === "/"}
           />
         </Link>
       </MenuItem>
-      <MenuItem>Item 2</MenuItem>
+      <MenuItem>
+        <Link to="#">
+          <IconButton
+            icon={HiOutlineBookOpen}
+            hoverIcon={HiBookOpen}
+            size={28}
+            ariaLabel="Home"
+            onClick={() => alert("아직 ...")}
+            disabled={location.pathname === "#"}
+          />
+        </Link>
+      </MenuItem>
+      <MenuItem>
+        <Link to="#">
+          <IconButton
+            icon={MdOutlineLocalMovies}
+            hoverIcon={MdLocalMovies}
+            size={28}
+            ariaLabel="Home"
+            onClick={() => alert("크흠 ...")}
+            disabled={location.pathname === "#"}
+          />
+        </Link>
+      </MenuItem>
       <MenuItem onClick={toggleTheme} under>
         <ThemeIcon size={28} />
       </MenuItem>

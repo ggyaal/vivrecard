@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import Alert from "./Alert";
-import HeaderProfile from "./HeaderProfile";
+import HeaderProfile from "./profiles/HeaderProfile";
 
 const Container = styled.header`
   position: absolute;
   width: 100%;
   height: 120px;
+  min-width: 800px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -27,6 +28,13 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  &:nth-child(2) {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 0;
+  }
 
   & > *:not(:last-child) {
     margin-right: 10px;

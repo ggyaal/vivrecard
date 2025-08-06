@@ -15,11 +15,7 @@ const Button = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  svg {
-    cursor: pointer;
-    pointer-events: auto;
-  }
+  cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
 `;
 
 const IconButton = ({
@@ -32,7 +28,7 @@ const IconButton = ({
 }: IconButtonProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  const DisplayIcon = isHovered && HoverIcon ? HoverIcon : Icon;
+  const DisplayIcon = HoverIcon && (isHovered || disabled) ? HoverIcon : Icon;
 
   return (
     <Button

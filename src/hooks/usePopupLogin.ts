@@ -1,54 +1,34 @@
-import { useCallback } from "react";
-
-type PopupLoginOptions = {
-  popupUrl: string;
-  width?: number;
-  height?: number;
-  onSuccess: (token: string) => void;
-  onError?: (error: string) => void;
-};
-
-export const usePopupLogin = ({
-  popupUrl,
-  width = 600,
-  height = 500,
-  onSuccess,
-  onError,
-}: PopupLoginOptions) => {
-  const openPopupLogin = useCallback(() => {
-    const left = window.screenX + (window.outerWidth - width) / 2;
-    const top = window.screenY + (window.outerHeight - height) / 2;
-
+const usePopupLogin = (registrationId: string) => {
+  const handleLogin = () => {
     const popup = window.open(
-      popupUrl,
-      "SocialLoginPopup",
-      `width=${width},height=${height},left=${left},top=${top}`
+      `${process.env.REACT_APP_API_URL}/api/v1/login/${registrationId}`,
+      "_blank",
+      "width=500,height=600"
     );
 
-    if (!popup) {
-      onError?.("팝업을 열 수 없습니다. 브라우저 팝업 차단을 확인하세요.");
-      return;
+    if (popup) {
+      popup.focus();
+    } else {
+      alert("팝업이 차단되어 있습니다. 팝업을 허용해주세요.");
     }
 
     const handleMessage = (event: MessageEvent) => {
-      console.log("Received message from popup:", event.data);
-      console.log("Event origin:", event.origin);
-      if (event.origin !== window.location.origin) return;
+      if (event.origin !== process.env.REACT_APP_API_URL) return;
 
-      const { isSuccess, data } = event.data;
+      const { accessToken }: { accessToken: string } = event.data;
 
-      if (isSuccess === "login-success" && data) {
-        onSuccess(data);
-      } else if (isSuccess === "login-failure" && data) {
-        onError?.(data);
+      if (typeof accessToken === "string") {
+        localStorage.setItem("accessToken", accessToken);
+        window.location.reload();
+      } else {
+        alert("로그인에 실패했습니다. 다시 시도해주세요.");
       }
-
-      // popup.close();
-      window.removeEventListener("message", handleMessage);
     };
 
     window.addEventListener("message", handleMessage);
-  }, [popupUrl, width, height, onSuccess, onError]);
+  };
 
-  return { openPopupLogin };
+  return { handleLogin };
 };
+
+export default usePopupLogin;

@@ -21,13 +21,14 @@ export const GlobalStyles = createGlobalStyle`
     -ms-user-select: none;
     user-select: none;
     box-sizing: border-box;
-    cursor: default;
   }
-
+  
   body {
+    min-width: 800px;
     background-color: ${({ theme }) => theme.colors.background};
     font-family: "Noto Sans KR", sans-serif;
     font-weight: 400;
+    cursor: default;
   }
 
   a {

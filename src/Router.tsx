@@ -3,7 +3,7 @@ import App from "./App";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
-import PopupDiscordLogin from "./pages/popups/PopupDiscordLogin";
+import Member from "./pages/Member";
 
 const router = createBrowserRouter([
   {
@@ -19,8 +19,8 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: "popup/login/discord",
-        element: <PopupDiscordLogin />,
+        path: "members/:id",
+        element: <Member />,
       },
     ],
     errorElement: <NotFound />,

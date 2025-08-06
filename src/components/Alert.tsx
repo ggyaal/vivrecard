@@ -6,7 +6,7 @@ import {
   HiOutlineBellAlert,
 } from "react-icons/hi2";
 import styled from "styled-components";
-import IconButton from "./IconButton";
+import IconButton from "./buttons/IconButton";
 
 const Container = styled.div``;
 

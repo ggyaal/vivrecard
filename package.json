@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@tanstack/react-query": "^5.84.1",
     "@testing-library/dom": "^10.4.0",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.7.13",
