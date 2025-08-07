@@ -13,11 +13,6 @@ export interface Member {
 }
 
 const fetchMember = async (id?: string): Promise<Member> => {
-  const accessToken = localStorage.getItem("accessToken");
-  if (!accessToken) {
-    throw new Error("Access token not found");
-  }
-
   const path = `/api/v1/members/${id !== undefined ? id : "me"}`;
 
   const res = await requestAutoRefresh({
@@ -29,8 +24,8 @@ const fetchMember = async (id?: string): Promise<Member> => {
 
 const useMember = ({ id }: { id?: string } = {}) => {
   return useQuery<Member>({
-    queryKey: ["member"],
-    queryFn: async () => fetchMember(id),
+    queryKey: [id ? "member_" + id : "me"],
+    queryFn: () => fetchMember(id),
     retry: false,
     staleTime: 10 * 60 * 1000,
   });

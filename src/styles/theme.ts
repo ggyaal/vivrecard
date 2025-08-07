@@ -3,7 +3,7 @@ import { DefaultTheme } from "styled-components";
 export const darkTheme: DefaultTheme = {
   borderRadius: "5px",
   colors: {
-    primary: "#98A1BC",
+    primary: "#4e5362ff",
     secondary: "#7A5A2F",
     sidebar: "#2B2E4A",
     background: "#202020",

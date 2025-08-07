@@ -4,6 +4,9 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Member from "./pages/Member";
+import MemberBadges from "./pages/sub-pages/MemberBadges";
+import MemberConnects from "./pages/sub-pages/MemberConnects";
+import MemberReviews from "./pages/sub-pages/MemberReviews";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +24,20 @@ const router = createBrowserRouter([
       {
         path: "members/:id",
         element: <Member />,
+        children: [
+          {
+            path: "badges",
+            element: <MemberBadges />,
+          },
+          {
+            path: "connects",
+            element: <MemberConnects />,
+          },
+          {
+            path: "reviews",
+            element: <MemberReviews />,
+          },
+        ],
       },
     ],
     errorElement: <NotFound />,

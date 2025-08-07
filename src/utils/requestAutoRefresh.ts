@@ -3,11 +3,13 @@ const requestAutoRefresh = async <T = any>({
   method = "GET",
   headers = {},
   body,
+  requiredLogin = true,
 }: {
   path: string;
   method?: string;
   headers?: HeadersInit;
   body?: any;
+  requiredLogin?: boolean;
 }): Promise<T> => {
   const doFetch = async (token: string | null) => {
     return fetch(process.env.REACT_APP_API_URL + path, {
@@ -23,6 +25,10 @@ const requestAutoRefresh = async <T = any>({
   };
 
   let accessToken: string | null = localStorage.getItem("accessToken");
+  if (requiredLogin && !accessToken) {
+    throw new Error("로그인이 필요한 요청입니다.");
+  }
+
   let res = await doFetch(accessToken);
 
   if (res.ok) return res.json();
@@ -44,7 +50,8 @@ const requestAutoRefresh = async <T = any>({
   }
 
   const { accessToken: newToken } = await refreshRes.json();
-  localStorage.setItem("accessToken", newToken);
+
+  if (newToken) localStorage.setItem("accessToken", newToken);
 
   res = await doFetch(newToken);
 

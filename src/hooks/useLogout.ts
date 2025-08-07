@@ -10,9 +10,8 @@ const useLogout = () => {
       method: "DELETE",
     });
 
-    queryClient.removeQueries({ queryKey: ["member"], exact: true });
+    queryClient.removeQueries({ queryKey: ["me"], exact: true });
     localStorage.removeItem("accessToken");
-    document.cookie = "refreshToken=; path=/; max-age=0";
     window.location.reload();
   };
 };
