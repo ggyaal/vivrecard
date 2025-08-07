@@ -26,9 +26,9 @@ const Menu = styled.div.withConfig({
   flex-direction: column;
   align-items: center;
   background-color: ${({ theme }) => theme.colors.sidebar};
-  width: 100px;
+  width: 120px;
   height: ${({ childrenCount }) =>
-    childrenCount > 0 ? `${childrenCount * 45}px` : "0"};
+    childrenCount > 0 ? `${childrenCount * 50 + 20}px` : "0"};
   padding: 10px 0;
   border-radius: ${({ theme }) => theme.borderRadius};
   top: 40px;
@@ -36,10 +36,19 @@ const Menu = styled.div.withConfig({
 
 const MenuItem = styled.div`
   width: 100%;
-  padding: 10px 20px;
+  height: 50px;
   color: ${({ theme }) => theme.colors.text};
   text-align: center;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > a,
+  button {
+    width: 100%;
+    height: 100%;
+  }
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.primary};
