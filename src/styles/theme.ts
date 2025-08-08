@@ -9,6 +9,7 @@ export const darkTheme: DefaultTheme = {
     background: "#202020",
     text: "#CCCCCC",
     shadow: "rgba(255, 255, 255, 0.3)",
+    error: "#BC2F2F",
   },
   discord: {
     background: "#1F1F1F",
@@ -29,6 +30,7 @@ export const lightTheme: DefaultTheme = {
     background: "#DFDFDF",
     text: "#2a2a3b",
     shadow: "rgba(0, 0, 0, 0.3)",
+    error: "#C83B3B",
   },
   discord: {
     background: "#5865F2",

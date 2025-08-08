@@ -10,6 +10,7 @@ declare module "styled-components" {
       background: string;
       text: string;
       shadow: string;
+      error: string;
     };
     discord: {
       background: string;

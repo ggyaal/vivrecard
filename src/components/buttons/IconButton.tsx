@@ -8,6 +8,7 @@ interface IconButtonProps {
   size?: number;
   onClick?: () => void;
   ariaLabel?: string;
+  selected?: boolean;
   disabled?: boolean;
 }
 
@@ -24,11 +25,12 @@ const IconButton = ({
   size = 24,
   onClick,
   ariaLabel,
+  selected = false,
   disabled = false,
 }: IconButtonProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  const DisplayIcon = HoverIcon && (isHovered || disabled) ? HoverIcon : Icon;
+  const DisplayIcon = HoverIcon && (isHovered || selected) ? HoverIcon : Icon;
 
   return (
     <Button

@@ -60,7 +60,7 @@ const Sidebar = ({ isDark, toggleTheme }: SidebarProps) => {
             hoverIcon={HiHome}
             size={28}
             ariaLabel="Home"
-            onClick={() => console.log("Home Clicked")}
+            selected={location.pathname === "/"}
             disabled={location.pathname === "/"}
           />
         </Link>
@@ -73,19 +73,20 @@ const Sidebar = ({ isDark, toggleTheme }: SidebarProps) => {
             size={28}
             ariaLabel="Home"
             onClick={() => alert("아직 ...")}
+            selected={location.pathname.startsWith("#")}
             disabled={location.pathname === "#"}
           />
         </Link>
       </MenuItem>
       <MenuItem>
-        <Link to="#">
+        <Link to="/movies">
           <IconButton
             icon={MdOutlineLocalMovies}
             hoverIcon={MdLocalMovies}
             size={28}
             ariaLabel="Home"
-            onClick={() => alert("크흠 ...")}
-            disabled={location.pathname === "#"}
+            selected={location.pathname.startsWith("/movies")}
+            disabled={location.pathname === "/movies"}
           />
         </Link>
       </MenuItem>
