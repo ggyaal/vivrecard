@@ -6,7 +6,8 @@ import {
   HiOutlineBookOpen,
 } from "react-icons/hi";
 import { HiMoon } from "react-icons/hi2";
-import { MdLocalMovies, MdOutlineLocalMovies } from "react-icons/md";
+import { BsCameraReels, BsCameraReelsFill } from "react-icons/bs";
+import { TbDeviceTvOld, TbDeviceTvOldFilled } from "react-icons/tb";
 import styled from "styled-components";
 import IconButton from "./buttons/IconButton";
 import { Link, useLocation } from "react-router-dom";
@@ -70,7 +71,7 @@ const Sidebar = ({ isDark, toggleTheme }: SidebarProps) => {
           <IconButton
             icon={HiOutlineBookOpen}
             hoverIcon={HiBookOpen}
-            size={28}
+            size={30}
             ariaLabel="Home"
             onClick={() => alert("아직 ...")}
             selected={location.pathname.startsWith("#")}
@@ -81,12 +82,24 @@ const Sidebar = ({ isDark, toggleTheme }: SidebarProps) => {
       <MenuItem>
         <Link to="/movies">
           <IconButton
-            icon={MdOutlineLocalMovies}
-            hoverIcon={MdLocalMovies}
+            icon={BsCameraReels}
+            hoverIcon={BsCameraReelsFill}
             size={28}
             ariaLabel="Home"
             selected={location.pathname.startsWith("/movies")}
             disabled={location.pathname === "/movies"}
+          />
+        </Link>
+      </MenuItem>
+      <MenuItem>
+        <Link to="/tvs">
+          <IconButton
+            icon={TbDeviceTvOld}
+            hoverIcon={TbDeviceTvOldFilled}
+            size={30}
+            ariaLabel="Home"
+            selected={location.pathname.startsWith("/tvs")}
+            disabled={location.pathname === "/tvs"}
           />
         </Link>
       </MenuItem>

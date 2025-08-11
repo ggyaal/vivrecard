@@ -11,6 +11,8 @@ import Books from "./pages/Books";
 import Movies from "./pages/Movies";
 import Movie from "./pages/Movie";
 import EmptyLayout from "./pages/EmptyLayout";
+import Tvs from "./pages/Tvs";
+import Tv from "./pages/Tv";
 
 const router = createBrowserRouter([
   {
@@ -58,6 +60,20 @@ const router = createBrowserRouter([
           {
             path: ":id",
             element: <Movie />,
+          },
+        ],
+      },
+      {
+        path: "tvs",
+        element: <EmptyLayout />,
+        children: [
+          {
+            path: "",
+            element: <Tvs />,
+          },
+          {
+            path: ":id",
+            element: <Tv />,
           },
         ],
       },

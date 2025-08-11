@@ -11,6 +11,21 @@ export const darkTheme: DefaultTheme = {
     shadow: "rgba(255, 255, 255, 0.3)",
     error: "#BC2F2F",
   },
+  content: {
+    background: "#1c1c1c",
+    text: "#FFF",
+    subtext: "#ccc",
+    star: "#eded91",
+    block: {
+      background: "#333",
+      text: "#FFF",
+    },
+    tag: {
+      primary: "#276eac",
+      secondary: "#6a819a",
+      text: "#FFF",
+    },
+  },
   discord: {
     background: "#1F1F1F",
     text: "#c8c8c8ff",
@@ -31,6 +46,21 @@ export const lightTheme: DefaultTheme = {
     text: "#2a2a3b",
     shadow: "rgba(0, 0, 0, 0.3)",
     error: "#C83B3B",
+  },
+  content: {
+    background: "#FFF",
+    text: "#1C1C1C",
+    subtext: "#ccc",
+    star: "#cfcf73",
+    block: {
+      background: "#e9ecef",
+      text: "#303030",
+    },
+    tag: {
+      primary: "#b3dcff",
+      secondary: "#6fb4ff",
+      text: "#FFF",
+    },
   },
   discord: {
     background: "#5865F2",

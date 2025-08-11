@@ -12,6 +12,21 @@ declare module "styled-components" {
       shadow: string;
       error: string;
     };
+    content: {
+      background: string;
+      text: string;
+      subtext: string;
+      star: string;
+      block: {
+        background: string;
+        text: string;
+      };
+      tag: {
+        primary: string;
+        secondary: string;
+        text: string;
+      };
+    };
     discord: {
       background: string;
       text: string;

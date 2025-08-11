@@ -126,6 +126,7 @@ const Movies = () => {
             <TagWrapper>
               {genres.genres.map((genre) => (
                 <SelectTag
+                  key={`genre_${genre.id}`}
                   name={genre.name}
                   isSelect={selectGenres.includes(String(genre.id))}
                   onClick={() => {
@@ -180,7 +181,10 @@ const Movies = () => {
             page={pageNumber}
             totalPage={movies.total_pages < 500 ? movies.total_pages : 500}
             isFirst={pageNumber <= 1}
-            isLast={pageNumber >= movies.total_pages}
+            isLast={
+              pageNumber >=
+              (movies.total_pages < 500 ? movies.total_pages : 500)
+            }
             shiftToPage={(page) => {
               searchParams.set("page", String(page));
               setSearchParams(searchParams);

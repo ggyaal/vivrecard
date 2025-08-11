@@ -3,34 +3,26 @@ import styled from "styled-components";
 
 interface IconImageProps {
   background: string;
-  width: number;
-  height: number;
   Icon: IconType;
   size: number;
 }
 
-const Container = styled.div<{
-  width: number;
-  height: number;
+const Container = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "background",
+})<{
   background: string;
 }>`
   background-color: ${({ background }) => background};
-  width: ${({ width }) => width + "px"};
-  height: ${({ height }) => height + "px"};
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
-const IconImage = ({
-  background,
-  width,
-  height,
-  Icon,
-  size,
-}: IconImageProps) => {
+const IconImage = ({ background, Icon, size }: IconImageProps) => {
   return (
-    <Container width={width} height={height} background={background}>
+    <Container background={background}>
       <Icon size={size} />
     </Container>
   );

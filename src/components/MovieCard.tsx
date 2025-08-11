@@ -81,13 +81,7 @@ const MovieCard = ({ movie }: { movie: MovieProps }) => {
                 src={`https://image.tmdb.org/t/p/w154/${movie.poster_path}`}
               />
             ) : (
-              <IconImage
-                background="#A9A9A9"
-                width={130}
-                height={195}
-                Icon={LuPopcorn}
-                size={55}
-              />
+              <IconImage background="#A9A9A9" Icon={LuPopcorn} size={55} />
             )}
           </ImageWrapper>
         </MovieWrapper>

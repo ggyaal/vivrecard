@@ -82,7 +82,7 @@ const Backdrop = styled.div.withConfig({
   aspect-ratio: 16 / 8;
   padding-top: ${({ url }) => (url ? "500px" : "10px")};
   background-image: ${({ url }) => url && `url(${url})`};
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
 `;
 
@@ -92,8 +92,8 @@ const Wrapper = styled.div`
   padding: 30px;
   display: flex;
   gap: 2rem;
-  color: #fff;
-  background-color: #1c1c1c;
+  color: ${({ theme }) => theme.content.text};
+  background-color: ${({ theme }) => theme.content.background};
   border-radius: ${({ theme }) => theme.borderRadius};
 `;
 
@@ -119,7 +119,7 @@ const SubTitle = styled.h2`
 
 const Tagline = styled.p`
   font-style: italic;
-  color: #ccc;
+  color: ${({ theme }) => theme.content.subtext};
   margin: 16px 0;
 `;
 
@@ -127,7 +127,8 @@ const Genres = styled.div`
   margin: 16px 0;
 
   span {
-    background-color: #333;
+    background-color: ${({ theme }) => theme.content.block.background};
+    color: ${({ theme }) => theme.content.block.text};
     border-radius: 4px;
     padding: 5px 10px;
     margin-right: 8px;
@@ -151,7 +152,8 @@ const MetaWrapper = styled.div`
 `;
 
 const MetaItem = styled.div`
-  background-color: #2b2b2b;
+  background-color: ${({ theme }) => theme.content.block.background};
+  color: ${({ theme }) => theme.content.block.text};
   padding: 10px 20px;
   border-radius: 5px;
   margin-bottom: 10px;
@@ -224,13 +226,7 @@ const Movie = () => {
                 alt={movie.title}
               />
             ) : (
-              <IconImage
-                background="#A9A9A9"
-                width={300}
-                height={450}
-                Icon={LuPopcorn}
-                size={75}
-              />
+              <IconImage background="#A9A9A9" Icon={LuPopcorn} size={75} />
             )}
             <InfoSection>
               <Title>{movie.title}</Title>
@@ -278,7 +274,10 @@ const Movie = () => {
                   <MetaTitle>언어:</MetaTitle>{" "}
                   <ItemList>
                     {movie.spoken_languages.map((l) => (
-                      <LanguageLabel code={l.iso_639_1} />
+                      <LanguageLabel
+                        key={`l_${l.iso_639_1}`}
+                        code={l.iso_639_1}
+                      />
                     ))}
                   </ItemList>
                 </MetaItem>
@@ -286,7 +285,11 @@ const Movie = () => {
                   <MetaTitle>제작 국가:</MetaTitle>{" "}
                   <ItemList>
                     {movie.production_countries.map((c) => (
-                      <CountryLabel isoCode={c.iso_3166_1} showEmoji={true} />
+                      <CountryLabel
+                        key={`c_${c.iso_3166_1}`}
+                        isoCode={c.iso_3166_1}
+                        showEmoji={true}
+                      />
                     ))}
                   </ItemList>
                 </MetaItem>

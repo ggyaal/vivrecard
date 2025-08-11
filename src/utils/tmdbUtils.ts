@@ -33,3 +33,19 @@ export const movieSearch = async (query: string, page: number) => {
     method: "GET",
   }).then((res) => res.json());
 };
+
+export const discoverTv = async (page: number) => {
+  const url = `${process.env.REACT_APP_TMDB_URL}/discover/tv?language=ko-KR&api_key=${process.env.REACT_APP_TMDB_API_KEY}&page=${page}`;
+
+  return fetch(url, {
+    method: "GET",
+  }).then((res) => res.json());
+};
+
+export const tvDetail = async (id: number) => {
+  const url = `${process.env.REACT_APP_TMDB_URL}/tv/${id}?language=ko-KR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`;
+
+  return fetch(url, {
+    method: "GET",
+  }).then((res) => res.json());
+};
