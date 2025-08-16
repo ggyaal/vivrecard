@@ -121,7 +121,6 @@ const Backdrop = styled.div<{ $url: string }>`
   width: 100%;
   min-height: 300px;
   aspect-ratio: ${({ $url }) => ($url ? "16 / 8" : "auto")};
-  padding-top: ${({ $url }) => ($url ? "500px" : "10px")};
   background-image: ${({ $url }) => $url && `url(${$url})`};
   background-size: cover;
   background-repeat: no-repeat;
