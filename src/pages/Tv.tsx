@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { tvDetail } from "../utils/tmdbUtils";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { Helmet } from "react-helmet-async";
-import Stars from "../components/Stars";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 interface LanguageProps {
   english_name: string;
@@ -72,7 +72,7 @@ interface SeasonProps {
   vote_average: number;
 }
 
-interface TvProps {
+export interface TvProps {
   adult: boolean;
   backdrop_path: string;
   created_by: PersonProps[];
@@ -114,72 +114,50 @@ const Container = styled.main`
   padding-top: 150px;
 `;
 
-const Backdrop = styled.div`
+const Backdrop = styled.div<{ $url: string }>`
+  position: relative;
+  display: flex;
+  justify-content: center;
   width: 100%;
+  min-height: 300px;
+  aspect-ratio: ${({ $url }) => ($url ? "16 / 8" : "auto")};
+  padding-top: ${({ $url }) => ($url ? "500px" : "10px")};
+  background-image: ${({ $url }) => $url && `url(${$url})`};
+  background-size: cover;
+  background-repeat: no-repeat;
 `;
 
 const Wrapper = styled.div`
-  min-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  gap: 24px;
+  width: 100%;
+  position: absolute;
+  top: 100%;
+  transform: translateY(-50%);
+  max-width: 1200px;
   padding: 30px;
+  transition: transform 0.3s ease;
   background-color: ${({ theme }) => theme.content.background};
   color: ${({ theme }) => theme.content.text};
+  overflow-x: auto;
 `;
 
-const Poster = styled.img`
-  width: 300px;
-  height: 450px;
-  object-fit: cover;
-  border-radius: 8px;
+const Toolbar = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
 `;
 
-const InfoSection = styled.div`
-  flex: 1;
-`;
-
-const Title = styled.h1`
-  font-size: 40px;
-  margin-bottom: 10px;
-`;
-
-const SubTitle = styled.h2`
-  font-size: 12px;
-`;
-
-const Tagline = styled.p`
-  font-style: italic;
-  margin: 16px 0;
-`;
-
-const Genres = styled.div`
-  margin: 16px 0;
-  span {
-    background-color: ${({ theme }) => theme.content.block.background};
-    color: ${({ theme }) => theme.content.block.text};
-    padding: 4px 8px;
-    margin-right: 8px;
-    border-radius: 4px;
-    font-size: 0.875rem;
+const ToolButton = styled(IoMdArrowRoundBack)`
+  transition: all 0.1s ease;
+  cursor: pointer;
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary};
+    transform: scale(1.1);
   }
-`;
-
-const Overview = styled.p`
-  font-size: 1rem;
-  line-height: 1.5;
-  margin-bottom: 24px;
-`;
-
-const Meta = styled.div``;
-
-const Rating = styled.span`
-  font-weight: bold;
-  color: #f39c12;
 `;
 
 const Tv = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data: tv, isLoading } = useQuery<TvProps>({
     queryKey: ["tv", id],
     queryFn: () => {
@@ -205,44 +183,25 @@ const Tv = () => {
     );
   }
 
+  const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
+
   return (
-    <Container>
-      <Backdrop>
-        <Wrapper>
-          <Poster
-            src={`https://image.tmdb.org/t/p/w500${tv.poster_path}`}
-            alt={tv.name}
-          />
-          <InfoSection>
-            <Title>{tv.name}</Title>
-            <SubTitle>{tv.original_name}</SubTitle>
-            {tv.tagline && <Tagline>"{tv.tagline}"</Tagline>}
-
-            <Stars score={tv.vote_average} showScore={true} />
-
-            <Genres>
-              {tv.genres.map((genre) => (
-                <span key={genre.id}>{genre.name}</span>
-              ))}
-            </Genres>
-
-            <Overview>{tv.overview}</Overview>
-
-            <Meta>
-              <p>첫 방영일: {tv.first_air_date}</p>
-              <p>마지막 방영일: {tv.last_air_date}</p>
-              <p>시즌 수: {tv.number_of_seasons}</p>
-              <p>총 에피소드 수: {tv.number_of_episodes}</p>
-              <p>
-                평점: <Rating>⭐ {tv.vote_average.toFixed(1)}</Rating> (
-                {tv.vote_count}명)
-              </p>
-              <p>원어: {tv.original_language.toUpperCase()}</p>
-            </Meta>
-          </InfoSection>
-        </Wrapper>
-      </Backdrop>
-    </Container>
+    <>
+      <Helmet>
+        <title>{tv.name}</title>
+        <meta name="description" content="Tv page of Vivre Card" />
+      </Helmet>
+      <Container>
+        <Backdrop $url={`${IMAGE_BASE}/${tv.backdrop_path}`}>
+          <Wrapper>
+            <Toolbar>
+              <ToolButton size={32} onClick={() => navigate(-1)} />
+            </Toolbar>
+            <Outlet context={{ tv }} />
+          </Wrapper>
+        </Backdrop>
+      </Container>
+    </>
   );
 };
 

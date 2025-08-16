@@ -12,7 +12,7 @@ const Container = styled.header`
   align-items: center;
   padding: 20px 60px;
   box-shadow: 0 2px 4px ${({ theme }) => theme.colors.shadow};
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
   z-index: 1000;
   transition: 0.3s ease;
   background-color: ${({ theme }) => theme.colors.background};

@@ -34,6 +34,7 @@ const Container = styled.main`
 
 const Wrapper = styled.div`
   padding: 10px;
+  margin: 0 80px;
 `;
 
 const TagWrapper = styled.div`
@@ -48,7 +49,7 @@ const TagWrapper = styled.div`
 const MovieList = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(5, 1fr);
+  gap: 15px;
 `;
 
 const EmptyList = styled.div`

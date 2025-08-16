@@ -1,15 +1,10 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { movieDetail } from "../utils/tmdbUtils";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { Helmet } from "react-helmet-async";
-import Stars from "../components/Stars";
-import CountryLabel from "../components/CountryLabel";
-import LanguageLabel from "../components/LanguageLabel";
-import { formatHourMinutes } from "../utils/timeUtils";
-import IconImage from "../components/IconImage";
-import { LuPopcorn } from "react-icons/lu";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 interface GenreProps {
   id: number;
@@ -34,7 +29,7 @@ interface LanguageProps {
   name: string;
 }
 
-interface MovieProps {
+export interface MovieProps {
   adult: boolean;
   backdrop_path: string;
   belongs_to_collection: {
@@ -75,112 +70,49 @@ const Container = styled.main`
   padding-top: 150px;
 `;
 
-const Backdrop = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "url",
-})<{ url?: string }>`
+const Backdrop = styled.div<{ $url?: string }>`
+  position: relative;
+  display: flex;
+  justify-content: center;
   width: 100%;
-  aspect-ratio: 16 / 8;
-  padding-top: ${({ url }) => (url ? "500px" : "10px")};
-  background-image: ${({ url }) => url && `url(${url})`};
+  min-height: 300px;
+  aspect-ratio: ${({ $url }) => ($url ? "16 / 8" : "auto")};
+  padding-top: ${({ $url }) => ($url ? "500px" : "10px")};
+  background-image: ${({ $url }) => $url && `url(${$url})`};
   background-size: cover;
   background-repeat: no-repeat;
 `;
 
 const Wrapper = styled.div`
+  width: 100%;
+  position: absolute;
+  top: 100%;
+  transform: translateY(-50%);
   max-width: 1200px;
-  margin: 0 auto;
   padding: 30px;
-  display: flex;
-  gap: 2rem;
   color: ${({ theme }) => theme.content.text};
   background-color: ${({ theme }) => theme.content.background};
   border-radius: ${({ theme }) => theme.borderRadius};
 `;
 
-const Poster = styled.img`
-  width: 300px;
-  height: 450px;
-  border-radius: 8px;
-  object-fit: cover;
-`;
-
-const InfoSection = styled.div`
-  flex: 1;
-`;
-
-const Title = styled.h1`
-  font-size: 40px;
-  margin-bottom: 10px;
-`;
-
-const SubTitle = styled.h2`
-  font-size: 12px;
-`;
-
-const Tagline = styled.p`
-  font-style: italic;
-  color: ${({ theme }) => theme.content.subtext};
-  margin: 16px 0;
-`;
-
-const Genres = styled.div`
-  margin: 16px 0;
-
-  span {
-    background-color: ${({ theme }) => theme.content.block.background};
-    color: ${({ theme }) => theme.content.block.text};
-    border-radius: 4px;
-    padding: 5px 10px;
-    margin-right: 8px;
-    font-size: 14px;
-  }
-`;
-
-const Overview = styled.p`
-  margin-bottom: 24px;
-  line-height: 1.6;
-`;
-
-const Meta = styled.div``;
-
-const MetaWrapper = styled.div`
+const Toolbar = styled.div`
   display: flex;
   align-items: center;
-  & > div:not(:last-child) {
-    margin-right: 10px;
-  }
+  margin-bottom: 20px;
 `;
 
-const MetaItem = styled.div`
-  background-color: ${({ theme }) => theme.content.block.background};
-  color: ${({ theme }) => theme.content.block.text};
-  padding: 10px 20px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-`;
-
-const MetaTitle = styled.div`
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 5px;
-`;
-
-const MetaValue = styled.div`
-  font-weight: 600;
-`;
-
-const ItemList = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 10px 0;
-
-  & > div:not(:last-child) {
-    margin-right: 10px;
+const ToolButton = styled(IoMdArrowRoundBack)`
+  transition: all 0.1s ease;
+  cursor: pointer;
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary};
+    transform: scale(1.1);
   }
 `;
 
 const Movie = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data: movie, isLoading } = useQuery<MovieProps>({
     queryKey: ["movie", id],
     queryFn: () => {
@@ -204,7 +136,7 @@ const Movie = () => {
           <meta name="description" content="Movie page of Vivre Card" />
         </Helmet>
         <Container>
-          <div>서버 연결에 문제가 발생하였습니다.</div>
+          <div>존재하지 않는 영화입니다.</div>
         </Container>
       </>
     );
@@ -217,84 +149,13 @@ const Movie = () => {
       </Helmet>
       <Container>
         <Backdrop
-          url={movie.backdrop_path && `${IMAGE_BASE}/${movie.backdrop_path}`}
+          $url={movie.backdrop_path && `${IMAGE_BASE}/${movie.backdrop_path}`}
         >
           <Wrapper>
-            {movie.poster_path ? (
-              <Poster
-                src={`${IMAGE_BASE}${movie.poster_path}`}
-                alt={movie.title}
-              />
-            ) : (
-              <IconImage background="#A9A9A9" Icon={LuPopcorn} size={75} />
-            )}
-            <InfoSection>
-              <Title>{movie.title}</Title>
-              {movie.original_title && (
-                <SubTitle>{movie.original_title}</SubTitle>
-              )}
-              {movie.tagline && <Tagline>"{movie.tagline}"</Tagline>}
-
-              <Stars score={movie.vote_average} showScore={true} />
-
-              <Genres>
-                {movie.genres.map((genre) => (
-                  <span key={genre.id}>{genre.name}</span>
-                ))}
-              </Genres>
-
-              <Overview>{movie.overview}</Overview>
-
-              <Meta>
-                <MetaWrapper>
-                  <MetaItem>
-                    <MetaTitle>개봉일:</MetaTitle>{" "}
-                    <MetaValue>{movie.release_date}</MetaValue>
-                  </MetaItem>
-                  <MetaItem>
-                    <MetaTitle>상영시간:</MetaTitle>
-                    <MetaValue>{formatHourMinutes(movie.runtime)}</MetaValue>
-                  </MetaItem>
-                  <MetaItem>
-                    <MetaTitle>제작비:</MetaTitle>
-                    <MetaValue>$ {movie.budget.toLocaleString()}</MetaValue>
-                  </MetaItem>
-                  <MetaItem>
-                    <MetaTitle>수익:</MetaTitle>
-                    <MetaValue>$ {movie.revenue.toLocaleString()}</MetaValue>
-                  </MetaItem>
-                  <MetaItem>
-                    <MetaTitle>별점:</MetaTitle>{" "}
-                    <MetaValue>
-                      {movie.vote_average} ({movie.vote_count} votes)
-                    </MetaValue>
-                  </MetaItem>
-                </MetaWrapper>
-                <MetaItem>
-                  <MetaTitle>언어:</MetaTitle>{" "}
-                  <ItemList>
-                    {movie.spoken_languages.map((l) => (
-                      <LanguageLabel
-                        key={`l_${l.iso_639_1}`}
-                        code={l.iso_639_1}
-                      />
-                    ))}
-                  </ItemList>
-                </MetaItem>
-                <MetaItem>
-                  <MetaTitle>제작 국가:</MetaTitle>{" "}
-                  <ItemList>
-                    {movie.production_countries.map((c) => (
-                      <CountryLabel
-                        key={`c_${c.iso_3166_1}`}
-                        isoCode={c.iso_3166_1}
-                        showEmoji={true}
-                      />
-                    ))}
-                  </ItemList>
-                </MetaItem>
-              </Meta>
-            </InfoSection>
+            <Toolbar>
+              <ToolButton size={32} onClick={() => navigate(-1)} />
+            </Toolbar>
+            <Outlet context={{ movie }} />
           </Wrapper>
         </Backdrop>
       </Container>

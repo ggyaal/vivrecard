@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import IconImage from "./IconImage";
 import { TbDeviceTvOff } from "react-icons/tb";
-import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
+import FadeInImageCard from "./FadeInImageCard";
 
 export interface TvProps {
   adult: boolean;
@@ -26,9 +26,7 @@ const Container = styled(Link)`
   min-width: 150px;
 `;
 
-const Card = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "visible",
-})<{ visible: boolean }>`
+const Card = styled.div`
   width: 100%;
   border-radius: 8px;
   overflow: hidden;
@@ -37,7 +35,6 @@ const Card = styled.div.withConfig({
   transition: all 0.2s ease;
   filter: brightness(0.8);
   cursor: pointer;
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
 
   &:hover {
     transform: translateY(-10px);
@@ -45,10 +42,14 @@ const Card = styled.div.withConfig({
   }
 `;
 
-const Poster = styled.img`
+const PosterWrapper = styled.div`
   width: 100%;
   aspect-ratio: 2 / 3;
   object-fit: cover;
+`;
+
+const Poster = styled.img`
+  width: 100%;
 `;
 
 const Info = styled.div`
@@ -56,8 +57,8 @@ const Info = styled.div`
 `;
 
 const Title = styled.h3`
-  font-size: 12px;
-  margin: 0 0 6px;
+  font-size: 14px;
+  margin-bottom: 6px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -82,35 +83,30 @@ const Rating = styled.span`
 `;
 
 const TvCard = ({ tv }: { tv: TvProps }) => {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    if (!tv.poster_path) {
-      setVisible(true);
-    }
-  }, [tv.poster_path]);
-
   return (
     <Container to={`/tvs/${tv.id}`}>
-      <Card visible={visible}>
-        {tv.poster_path ? (
-          <Poster
-            src={`https://image.tmdb.org/t/p/w500${tv.poster_path}`}
-            alt={tv.name}
-            onLoad={() => setVisible(true)}
-          />
-        ) : (
-          <IconImage background="#A9A9A9" Icon={TbDeviceTvOff} size={55} />
-        )}
-        <Info>
-          <Title>{tv.name}</Title>
-          <SubInfo>{tv.first_air_date}</SubInfo>
-          <Rating>
-            <FaStar size={12} />
-            <span>{tv.vote_average.toFixed(1)}</span>
-          </Rating>
-        </Info>
-      </Card>
+      <FadeInImageCard>
+        <Card>
+          <PosterWrapper>
+            {tv.poster_path ? (
+              <Poster
+                src={`https://image.tmdb.org/t/p/w500${tv.poster_path}`}
+                alt={tv.name}
+              />
+            ) : (
+              <IconImage Icon={TbDeviceTvOff} size={55} />
+            )}
+          </PosterWrapper>
+          <Info>
+            <Title>{tv.name}</Title>
+            <SubInfo>{tv.first_air_date}</SubInfo>
+            <Rating>
+              <FaStar size={12} />
+              <span>{tv.vote_average.toFixed(1)}</span>
+            </Rating>
+          </Info>
+        </Card>
+      </FadeInImageCard>
     </Container>
   );
 };

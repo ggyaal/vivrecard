@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import IconImage from "./IconImage";
 import { LuPopcorn } from "react-icons/lu";
+import { FaStar } from "react-icons/fa";
+import FadeInImageCard from "./FadeInImageCard";
 
 export interface MovieProps {
   adult: boolean;
@@ -20,77 +22,92 @@ export interface MovieProps {
   vote_count: number;
 }
 
-const Movie = styled.div`
-  width: 150px;
-  height: 250px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  filter: brightness(0.5);
+const Container = styled(Link)`
+  min-width: 150px;
+`;
+
+const Card = styled.div`
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: #fff;
+  transition: all 0.2s ease;
+  filter: brightness(0.8);
   cursor: pointer;
-  transition: all 0.3s ease-in-out;
 
   &:hover {
-    transform: translateY(5px);
+    transform: translateY(-10px);
     filter: none;
   }
 `;
 
-const MovieWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+const PosterWrapper = styled.div`
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
 `;
 
-const ImageWrapper = styled.div`
-  overflow: hidden;
-  border-radius: 10px;
+const Poster = styled.img`
+  width: 100%;
 `;
 
-const MovieImage = styled.img`
-  width: 130px;
-  max-height: 200px;
+const Info = styled.div`
+  padding: 10px;
 `;
 
-const MovieTitle = styled.div`
-  width: 120px;
-  font-size: 12px;
-  text-align: center;
-  color: ${({ theme }) => theme.colors.text};
-  font-weight: 600;
+const Title = styled.h3`
+  font-size: 14px;
+  margin-bottom: 6px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
 
-const MovieYear = styled.div`
+const SubInfo = styled.div`
   font-size: 10px;
-  color: ${({ theme }) => theme.colors.shadow};
+  color: #666;
+  margin-bottom: 4px;
+`;
+
+const Rating = styled.span`
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: bold;
+  color: #f39c12;
+
+  & > svg:not(:last-child) {
+    margin-right: 5px;
+  }
 `;
 
 const MovieCard = ({ movie }: { movie: MovieProps }) => {
   return (
-    <Link to={`/movies/${movie.id}`}>
-      <Movie>
-        <MovieWrapper>
-          <ImageWrapper>
+    <Container to={`/movies/${movie.id}`}>
+      <FadeInImageCard>
+        <Card>
+          <PosterWrapper>
             {movie.poster_path ? (
-              <MovieImage
-                src={`https://image.tmdb.org/t/p/w154/${movie.poster_path}`}
+              <Poster
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
               />
             ) : (
-              <IconImage background="#A9A9A9" Icon={LuPopcorn} size={55} />
+              <IconImage Icon={LuPopcorn} size={55} />
             )}
-          </ImageWrapper>
-        </MovieWrapper>
-        <MovieWrapper>
-          <MovieTitle>{movie.title}</MovieTitle>
-          <MovieYear>{movie.release_date}</MovieYear>
-        </MovieWrapper>
-      </Movie>
-    </Link>
+          </PosterWrapper>
+          <Info>
+            <Title>{movie.title}</Title>
+            <SubInfo>{movie.release_date}</SubInfo>
+            <Rating>
+              <FaStar size={12} />
+              <span>{movie.vote_average.toFixed(1)}</span>
+            </Rating>
+          </Info>
+        </Card>
+      </FadeInImageCard>
+    </Container>
   );
 };
 

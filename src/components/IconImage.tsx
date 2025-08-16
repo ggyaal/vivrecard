@@ -2,17 +2,15 @@ import { IconType } from "react-icons";
 import styled from "styled-components";
 
 interface IconImageProps {
-  background: string;
+  background?: string;
   Icon: IconType;
   size: number;
 }
 
-const Container = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "background",
-})<{
-  background: string;
-}>`
-  background-color: ${({ background }) => background};
+const Container = styled.div<{ $background?: string }>`
+  background-color: ${({ $background, theme }) =>
+    $background ? $background : theme.colors.primary};
+  color: ${({ theme }) => theme.colors.text};
   width: 100%;
   height: 100%;
   display: flex;
@@ -22,7 +20,7 @@ const Container = styled.div.withConfig({
 
 const IconImage = ({ background, Icon, size }: IconImageProps) => {
   return (
-    <Container background={background}>
+    <Container $background={background}>
       <Icon size={size} />
     </Container>
   );
