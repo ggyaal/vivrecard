@@ -12,6 +12,7 @@ const Container = styled.div`
 `;
 
 const PosterWrapper = styled.div`
+  min-width: 300px;
   width: 300px;
   height: 450px;
   border-radius: 8px;
