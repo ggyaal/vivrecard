@@ -15,6 +15,7 @@ const Header = styled.div`
 const ThumbnailWrapper = styled.div`
   min-width: 250px;
   width: 250px;
+  height: fit-content;
   border-radius: 8px;
   overflow: hidden;
 `;
