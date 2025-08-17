@@ -4,23 +4,7 @@ import IconImage from "./IconImage";
 import { TbDeviceTvOff } from "react-icons/tb";
 import { FaStar } from "react-icons/fa";
 import FadeInImageCard from "./FadeInImageCard";
-
-export interface TvProps {
-  adult: boolean;
-  backdrop_path: string;
-  first_air_date: string;
-  genre_ids: number[];
-  id: number;
-  name: string;
-  origin_country: string;
-  original_language: string;
-  original_name: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  vote_average: number;
-  vote_count: number;
-}
+import { TvSimpleProps } from "../types/tv";
 
 const Container = styled(Link)`
   min-width: 150px;
@@ -82,7 +66,7 @@ const Rating = styled.span`
   }
 `;
 
-const TvCard = ({ tv }: { tv: TvProps }) => {
+const TvCard = ({ tv }: { tv: TvSimpleProps }) => {
   return (
     <Container to={`/tvs/${tv.id}`}>
       <FadeInImageCard>

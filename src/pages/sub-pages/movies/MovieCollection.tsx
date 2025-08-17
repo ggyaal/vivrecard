@@ -1,5 +1,4 @@
 import { useOutletContext } from "react-router-dom";
-import { MovieProps } from "../../Movie";
 import { useQuery } from "@tanstack/react-query";
 import { movieCollection } from "../../../utils/tmdbUtils";
 import LoadingSpinner from "../../../components/LoadingSpinner";
@@ -8,7 +7,7 @@ import { Link } from "react-router-dom";
 import FadeInImageCard from "../../../components/FadeInImageCard";
 import IconImage from "../../../components/IconImage";
 import { LuPopcorn } from "react-icons/lu";
-import { CollectionProps } from "../../Collection";
+import { CollectionProps, MovieDetailProps } from "../../../types/movie";
 
 const Container = styled.div``;
 
@@ -114,7 +113,7 @@ const CardImg = styled.img`
 `;
 
 const MovieCollection = () => {
-  const { movie } = useOutletContext<{ movie: MovieProps }>();
+  const { movie } = useOutletContext<{ movie: MovieDetailProps }>();
   const { data: collection, isLoading } = useQuery<CollectionProps>({
     queryKey: ["collection", movie.belongs_to_collection?.id],
     queryFn: () => {

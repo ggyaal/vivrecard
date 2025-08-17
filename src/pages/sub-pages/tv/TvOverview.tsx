@@ -1,8 +1,8 @@
 import { useOutletContext } from "react-router-dom";
 import styled from "styled-components";
-import { TvProps } from "../../Tv";
 import LanguageLabel from "../../../components/LanguageLabel";
 import CountryLabel from "../../../components/CountryLabel";
+import { TvDetailProps } from "../../../types/tv";
 
 const Container = styled.div``;
 
@@ -47,7 +47,7 @@ const Block = styled.div`
 `;
 
 const TvOverview = () => {
-  const { tv } = useOutletContext<{ tv: TvProps }>();
+  const { tv } = useOutletContext<{ tv: TvDetailProps }>();
 
   const handleXScroll = (e: React.WheelEvent<HTMLElement>) => {
     e.currentTarget.scrollLeft += e.deltaY;

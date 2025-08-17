@@ -4,23 +4,7 @@ import IconImage from "./IconImage";
 import { LuPopcorn } from "react-icons/lu";
 import { FaStar } from "react-icons/fa";
 import FadeInImageCard from "./FadeInImageCard";
-
-export interface MovieProps {
-  adult: boolean;
-  backdrop_path: string;
-  genre_ids: number[];
-  id: number;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-}
+import { MovieSimpleProps } from "../types/movie";
 
 const Container = styled(Link)`
   min-width: 150px;
@@ -82,7 +66,7 @@ const Rating = styled.span`
   }
 `;
 
-const MovieCard = ({ movie }: { movie: MovieProps }) => {
+const MovieCard = ({ movie }: { movie: MovieSimpleProps }) => {
   return (
     <Container to={`/movies/${movie.id}`}>
       <FadeInImageCard>

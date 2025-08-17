@@ -5,107 +5,7 @@ import { tvDetail } from "../utils/tmdbUtils";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { Helmet } from "react-helmet-async";
 import { IoMdArrowRoundBack } from "react-icons/io";
-
-interface LanguageProps {
-  english_name: string;
-  iso_639_1: string;
-  name: string;
-}
-
-interface PersonProps {
-  credit_id: string;
-  gender: number;
-  id: number;
-  name: string;
-  original_name: string;
-  profile_path: string;
-}
-
-interface GenreProps {
-  id: number;
-  name: string;
-}
-
-interface EpisodeProps {
-  air_date: string;
-  episode_number: number;
-  episode_type: string;
-  id: number;
-  name: string;
-  overview: string;
-  production_code: string;
-  runtime: number;
-  season_number: number;
-  show_id: number;
-  still_path: string;
-  vote_average: number;
-  vote_count: number;
-}
-
-interface NetworkProps {
-  id: number;
-  logo_path: string;
-  name: string;
-  origin_country: string;
-}
-
-interface CompanyProps {
-  id: number;
-  logo_path: string;
-  name: string;
-  origin_country: string;
-}
-
-interface CountryProps {
-  iso_3166_1: string;
-  name: string;
-}
-
-interface SeasonProps {
-  air_date: string;
-  episode_count: number;
-  id: number;
-  name: string;
-  overview: string;
-  poster_path: string;
-  season_number: number;
-  vote_average: number;
-}
-
-export interface TvProps {
-  adult: boolean;
-  backdrop_path: string;
-  created_by: PersonProps[];
-  episode_run_time: number[];
-  first_air_date: string;
-  genres: GenreProps[];
-  homepage: string;
-  id: number;
-  in_production: boolean;
-  languages: string[];
-  last_air_date: string;
-  last_episode_to_air: EpisodeProps;
-  name: string;
-  networks: NetworkProps[];
-  next_episode_to_air: object;
-  number_of_episodes: number;
-  number_of_seasons: number;
-  origin_country: string[];
-  original_language: string;
-  original_name: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  production_companies: CompanyProps[];
-  production_countries: CountryProps[];
-  seasons: SeasonProps[];
-  spoken_languages: LanguageProps[];
-  status: string;
-  tagline: string;
-  type: string;
-  vote_average: number;
-  vote_count: number;
-}
+import { TvDetailProps } from "../types/tv";
 
 const Container = styled.main`
   display: flex;
@@ -157,7 +57,7 @@ const ToolButton = styled(IoMdArrowRoundBack)`
 const Tv = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: tv, isLoading } = useQuery<TvProps>({
+  const { data: tv, isLoading } = useQuery<TvDetailProps>({
     queryKey: ["tv", id],
     queryFn: () => {
       const idNumber = Number(id);

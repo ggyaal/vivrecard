@@ -1,10 +1,10 @@
 import { Outlet, useOutletContext } from "react-router-dom";
-import { TvProps } from "../../Tv";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import Stars from "../../../components/Stars";
 import { ImTv } from "react-icons/im";
 import IconImage from "../../../components/IconImage";
+import { TvDetailProps } from "../../../types/tv";
 
 const Container = styled.div`
   display: flex;
@@ -79,7 +79,7 @@ const MenuItem = styled(NavLink)`
 const Meta = styled.div``;
 
 const TvSerise = () => {
-  const { tv } = useOutletContext<{ tv: TvProps }>();
+  const { tv } = useOutletContext<{ tv: TvDetailProps }>();
 
   const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 

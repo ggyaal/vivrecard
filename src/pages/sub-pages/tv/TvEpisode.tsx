@@ -1,7 +1,9 @@
 import { useOutletContext, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { SeasonProps } from "../../Season";
 import Stars from "../../../components/Stars";
+import { SeasonDetailProps } from "../../../types/tv";
+import IconImage from "../../../components/IconImage";
+import { ImTv } from "react-icons/im";
 
 const Container = styled.div``;
 
@@ -10,9 +12,15 @@ const Header = styled.div`
   justify-content: space-between;
 `;
 
-const Thumbnail = styled.img`
+const ThumbnailWrapper = styled.div`
+  min-width: 250px;
   width: 250px;
   border-radius: 8px;
+  overflow: hidden;
+`;
+
+const Thumbnail = styled.img`
+  width: 100%;
   object-fit: cover;
 `;
 
@@ -45,7 +53,7 @@ const Overview = styled.p`
 
 const TvEpisode = () => {
   const { episodeNumber } = useParams();
-  const { season } = useOutletContext<{ season: SeasonProps }>();
+  const { season } = useOutletContext<{ season: SeasonDetailProps }>();
   const episode = season.episodes.find(
     (ep) => ep.episode_number === Number(episodeNumber)
   );
@@ -66,9 +74,15 @@ const TvEpisode = () => {
           <Meta>방영일: {episode.air_date}</Meta>
           <Meta>런타임: {episode.runtime}분</Meta>
         </HeaderInfo>
-        <Thumbnail
-          src={`https://image.tmdb.org/t/p/w500${episode.still_path}`}
-        />
+        <ThumbnailWrapper>
+          {episode.still_path ? (
+            <Thumbnail
+              src={`https://image.tmdb.org/t/p/w500${episode.still_path}`}
+            />
+          ) : (
+            <IconImage Icon={ImTv} size={55} />
+          )}
+        </ThumbnailWrapper>
       </Header>
 
       <Overview>{episode.overview}</Overview>

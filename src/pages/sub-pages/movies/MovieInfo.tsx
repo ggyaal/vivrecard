@@ -1,10 +1,10 @@
 import { Outlet, useOutletContext } from "react-router-dom";
-import { MovieProps } from "../../Movie";
 import styled from "styled-components";
 import Stars from "../../../components/Stars";
 import IconImage from "../../../components/IconImage";
 import { LuPopcorn } from "react-icons/lu";
 import { NavLink } from "react-router-dom";
+import { MovieDetailProps } from "../../../types/movie";
 
 const Container = styled.div`
   display: flex;
@@ -80,7 +80,7 @@ const MenuItem = styled(NavLink)`
 const Meta = styled.div``;
 
 const MovieInfo = () => {
-  const { movie } = useOutletContext<{ movie: MovieProps }>();
+  const { movie } = useOutletContext<{ movie: MovieDetailProps }>();
 
   const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 

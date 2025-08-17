@@ -1,11 +1,11 @@
 import { useOutletContext } from "react-router-dom";
 import styled from "styled-components";
-import { SeasonProps } from "../../Season";
 import Stars from "../../../components/Stars";
 import IconImage from "../../../components/IconImage";
 import { ImTv } from "react-icons/im";
 import { Link } from "react-router-dom";
 import FadeInImageCard from "../../../components/FadeInImageCard";
+import { SeasonDetailProps } from "../../../types/tv";
 
 const Container = styled.div`
   display: flex;
@@ -112,7 +112,7 @@ const EpisodeImg = styled.img`
 `;
 
 const TvSeason = () => {
-  const { season } = useOutletContext<{ season: SeasonProps }>();
+  const { season } = useOutletContext<{ season: SeasonDetailProps }>();
 
   const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 

@@ -9,33 +9,7 @@ import IconImage from "../components/IconImage";
 import { Link } from "react-router-dom";
 import FadeInImageCard from "../components/FadeInImageCard";
 import { IoMdArrowRoundBack } from "react-icons/io";
-
-interface PartProps {
-  adult: boolean;
-  backdrop_path: string;
-  genre_ids: number[];
-  id: number;
-  media_type: string;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-}
-
-export interface CollectionProps {
-  backdrop_path: string;
-  id: number;
-  name: string;
-  overview: string;
-  parts: PartProps[];
-  poster_path: string;
-}
+import { CollectionProps } from "../types/movie";
 
 const Container = styled.main`
   display: flex;

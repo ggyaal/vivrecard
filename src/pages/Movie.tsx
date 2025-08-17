@@ -5,63 +5,7 @@ import { movieDetail } from "../utils/tmdbUtils";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { Helmet } from "react-helmet-async";
 import { IoMdArrowRoundBack } from "react-icons/io";
-
-interface GenreProps {
-  id: number;
-  name: string;
-}
-
-interface CompanyProps {
-  id: number;
-  logo_path: string;
-  name: string;
-  origin_country: string;
-}
-
-interface CountryProps {
-  iso_3166_1: string;
-  name: string;
-}
-
-interface LanguageProps {
-  english_name: string;
-  iso_639_1: string;
-  name: string;
-}
-
-export interface MovieProps {
-  adult: boolean;
-  backdrop_path: string;
-  belongs_to_collection: {
-    id: number;
-    name: string;
-    poster_path: string;
-    backdrop_path: string;
-  };
-  budget: number;
-  genres: GenreProps[];
-  homepage: string;
-  id: number;
-  imdb_id: string;
-  origin_country: string[];
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  production_companies: CompanyProps[];
-  production_countries: CountryProps[];
-  release_date: string;
-  revenue: number;
-  runtime: number;
-  spoken_languages: LanguageProps[];
-  status: string;
-  tagline: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-}
+import { MovieDetailProps } from "../types/movie";
 
 const Container = styled.main`
   display: flex;
@@ -112,7 +56,7 @@ const ToolButton = styled(IoMdArrowRoundBack)`
 const Movie = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: movie, isLoading } = useQuery<MovieProps>({
+  const { data: movie, isLoading } = useQuery<MovieDetailProps>({
     queryKey: ["movie", id],
     queryFn: () => {
       const idNumber = Number(id);

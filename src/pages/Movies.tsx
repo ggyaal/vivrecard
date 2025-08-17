@@ -3,27 +3,15 @@ import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
 import { movieSearch, discoverMovies, movieGenres } from "../utils/tmdbUtils";
 import LoadingSpinner from "../components/LoadingSpinner";
-import MovieCard, { MovieProps } from "../components/MovieCard";
+import MovieCard from "../components/MovieCard";
 import PageNav from "../components/PageNav";
 import { useSearchParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import Dropdown from "../components/Dropdown";
 import { parseSort } from "../utils/parseUtils";
 import SelectTag from "../components/SelectTag";
-
-interface MoviePageProps {
-  page: number;
-  total_pages: number;
-  total_results: number;
-  results: MovieProps[];
-}
-
-export interface GenreProps {
-  genres: {
-    id: number;
-    name: string;
-  }[];
-}
+import { GenreListProps, PageProps } from "../types/tmdb";
+import { MovieSimpleProps } from "../types/movie";
 
 const Container = styled.main`
   display: flex;
@@ -66,7 +54,7 @@ const Movies = () => {
   const paramGenres = searchParams.get("genres");
   const selectGenres = paramGenres ? paramGenres.split(",") : [];
 
-  const { data: genres, isLoading: genresLoading } = useQuery<GenreProps>({
+  const { data: genres, isLoading: genresLoading } = useQuery<GenreListProps>({
     queryKey: ["movies", "genres"],
     queryFn: () => movieGenres(),
   });
@@ -76,7 +64,7 @@ const Movies = () => {
       ? ["movies", paramQuery, pageNumber]
       : ["movies", pageNumber, paramSort, selectGenres.join(",")];
 
-  const { data: movies, isLoading } = useQuery<MoviePageProps, Error>({
+  const { data: movies, isLoading } = useQuery<PageProps<MovieSimpleProps>>({
     queryKey,
     queryFn: () =>
       paramQuery && paramQuery.length > 1

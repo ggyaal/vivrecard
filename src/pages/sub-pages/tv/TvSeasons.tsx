@@ -1,10 +1,10 @@
 import { useOutletContext } from "react-router-dom";
 import styled from "styled-components";
-import { TvProps } from "../../Tv";
 import { Link } from "react-router-dom";
 import FadeInImageCard from "../../../components/FadeInImageCard";
 import IconImage from "../../../components/IconImage";
 import { ImTv } from "react-icons/im";
+import { TvDetailProps } from "../../../types/tv";
 
 const Container = styled.div`
   padding: 20px 10px;
@@ -74,7 +74,7 @@ const CardImg = styled.img`
 `;
 
 const TvSeasons = () => {
-  const { tv } = useOutletContext<{ tv: TvProps }>();
+  const { tv } = useOutletContext<{ tv: TvDetailProps }>();
 
   const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 

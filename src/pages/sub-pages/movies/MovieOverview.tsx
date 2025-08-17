@@ -3,7 +3,7 @@ import { formatHourMinutes } from "../../../utils/timeUtils";
 import CountryLabel from "../../../components/CountryLabel";
 import LanguageLabel from "../../../components/LanguageLabel";
 import { useOutletContext } from "react-router-dom";
-import { MovieProps } from "../../Movie";
+import { MovieDetailProps } from "../../../types/movie";
 
 const Overview = styled.p`
   margin-bottom: 24px;
@@ -47,7 +47,7 @@ const ItemList = styled.div`
 `;
 
 const MovieOverview = () => {
-  const { movie } = useOutletContext<{ movie: MovieProps }>();
+  const { movie } = useOutletContext<{ movie: MovieDetailProps }>();
 
   if (!movie) return <div>영화 정보가 없습니다.</div>;
 

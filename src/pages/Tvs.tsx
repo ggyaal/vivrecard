@@ -2,7 +2,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 import { discoverTvs, tvGenres, tvSearch } from "../utils/tmdbUtils";
 import LoadingSpinner from "../components/LoadingSpinner";
-import TvCard, { TvProps } from "../components/TvCard";
+import TvCard from "../components/TvCard";
 import { Helmet } from "react-helmet-async";
 import PageNav from "../components/PageNav";
 import { useSearchParams } from "react-router-dom";
@@ -10,20 +10,8 @@ import SearchBar from "../components/SearchBar";
 import { parseSort } from "../utils/parseUtils";
 import SelectTag from "../components/SelectTag";
 import Dropdown from "../components/Dropdown";
-
-export interface GenreProps {
-  genres: {
-    id: number;
-    name: string;
-  }[];
-}
-
-interface TvPageProps {
-  page: number;
-  results: TvProps[];
-  total_pages: number;
-  total_results: number;
-}
+import { GenreListProps, PageProps } from "../types/tmdb";
+import { TvSimpleProps } from "../types/tv";
 
 const Container = styled.main`
   display: flex;
@@ -66,7 +54,7 @@ const Tvs = () => {
   const paramGenres = searchParams.get("genres");
   const selectGenres = paramGenres ? paramGenres.split(",") : [];
 
-  const { data: genres, isLoading: genresLoading } = useQuery<GenreProps>({
+  const { data: genres, isLoading: genresLoading } = useQuery<GenreListProps>({
     queryKey: ["tv", "genres"],
     queryFn: () => tvGenres(),
   });
@@ -76,7 +64,7 @@ const Tvs = () => {
       ? ["tv", paramQuery, pageNumber]
       : ["tv", pageNumber, paramSort, selectGenres.join(",")];
 
-  const { data: tvs, isLoading } = useQuery<TvPageProps>({
+  const { data: tvs, isLoading } = useQuery<PageProps<TvSimpleProps>>({
     queryKey: queryKey,
     queryFn: () =>
       paramQuery && paramQuery.length > 0
