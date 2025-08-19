@@ -1,8 +1,15 @@
 import { Outlet, useOutletContext, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { seasonDetail } from "../utils/tmdbUtils";
+import { seasonDetail } from "../api/tmdb/tmdb";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { SeasonDetailProps, TvDetailProps } from "../types/tv";
+import { getPlatformId } from "../api/backend/getPlatform";
+import { getContentId } from "../api/backend/getContent";
+import {
+  createContentSeason,
+  createContentSeries,
+} from "../api/backend/createContent";
+import { Helmet } from "react-helmet-async";
 
 const Season = () => {
   const { number } = useParams();
@@ -12,11 +19,58 @@ const Season = () => {
     queryFn: () => seasonDetail(tv.id, Number(number)),
   });
 
+  const { data: platformId, isLoading: platformIdLoading } = useQuery<
+    string | null
+  >({
+    queryKey: ["platformId", "TMDB"],
+    queryFn: () => getPlatformId("TMDB"),
+  });
+
+  const { data: seasonId, refetch } = useQuery<string | null>({
+    queryKey: ["contentId", "TMDB", tv.id],
+    queryFn: () =>
+      platformId ? getContentId(platformId, `season_${season!.id}`) : null,
+    enabled: !!platformId && !!season,
+  });
+
   if (isLoading) return <LoadingSpinner />;
 
   if (!season) return <div>TV 정보가 없습니다.</div>;
 
-  return <Outlet context={{ season }} />;
+  if (platformIdLoading || !platformId)
+    return <Outlet context={{ season, seasonId }} />;
+
+  return (
+    <>
+      <Helmet>
+        <title>{`${tv.name} - ${season.name}`}</title>
+        <meta name="description" content="TV season page of Vivre Card" />
+      </Helmet>
+      <Outlet
+        context={{
+          season,
+          seasonId,
+          idRefetch: refetch,
+          platformId,
+          genres: tv.genres,
+          saveSeason: async () => {
+            let seriesId = await getContentId(platformId, `tv_${tv.id}`);
+            if (!seriesId) {
+              const series = await createContentSeries(platformId, tv);
+              seriesId = series.id;
+            }
+            const content = await createContentSeason(
+              seriesId,
+              platformId,
+              season,
+              tv.genres
+            );
+            return content.id;
+          },
+        }}
+      />
+    </>
+  );
 };
 
 export default Season;

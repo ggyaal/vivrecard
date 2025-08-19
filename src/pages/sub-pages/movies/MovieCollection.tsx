@@ -1,6 +1,6 @@
 import { useOutletContext } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { movieCollection } from "../../../utils/tmdbUtils";
+import { movieCollection } from "../../../api/tmdb/tmdb";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import styled from "styled-components";
 import { Link } from "react-router-dom";

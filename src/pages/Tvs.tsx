@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
-import { discoverTvs, tvGenres, tvSearch } from "../utils/tmdbUtils";
+import { discoverTvs, tvGenres, tvSearch } from "../api/tmdb/tmdb";
 import LoadingSpinner from "../components/LoadingSpinner";
 import TvCard from "../components/TvCard";
 import { Helmet } from "react-helmet-async";

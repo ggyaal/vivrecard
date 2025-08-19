@@ -4,9 +4,9 @@ export interface APIResponse<T> {
   timestamp: string;
 }
 
-interface PageResponse<T> {
+export interface PageResponse<T> {
   content: T[];
-  last: number;
+  last: boolean;
   page: number;
   size: number;
   totalElements: number;

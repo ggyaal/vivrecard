@@ -9,6 +9,7 @@ declare module "styled-components" {
       sidebar: string;
       background: string;
       text: string;
+      paleText: string;
       shadow: string;
       error: string;
     };

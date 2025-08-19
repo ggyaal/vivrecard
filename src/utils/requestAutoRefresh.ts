@@ -1,3 +1,5 @@
+import { APIResponse } from "../types/api";
+
 const requestAutoRefresh = async <T = any>({
   path,
   method = "GET",
@@ -10,7 +12,7 @@ const requestAutoRefresh = async <T = any>({
   headers?: HeadersInit;
   body?: any;
   requiredLogin?: boolean;
-}): Promise<T> => {
+}): Promise<APIResponse<T>> => {
   const doFetch = async (token: string | null) => {
     return fetch(process.env.REACT_APP_API_URL + path, {
       method,
@@ -31,32 +33,24 @@ const requestAutoRefresh = async <T = any>({
 
   let res = await doFetch(accessToken);
 
-  if (res.ok) return res.json();
+  if (res.status === 401) {
+    const refreshRes = await fetch(
+      `${process.env.REACT_APP_API_URL}/api/v1/tokens/refresh`,
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
 
-  if (res.status !== 401) {
-    throw new Error("데이터를 가져오는 데에 실패하였습니다.");
-  }
-
-  const refreshRes = await fetch(
-    `${process.env.REACT_APP_API_URL}/api/v1/tokens/refresh`,
-    {
-      method: "POST",
-      credentials: "include",
+    if (!refreshRes.ok) {
+      throw new Error("토큰 갱신에 실패하였습니다. 다시 로그인해주세요.");
     }
-  );
 
-  if (!refreshRes.ok) {
-    throw new Error("토큰 갱신에 실패하였습니다. 다시 로그인해주세요.");
-  }
+    const { accessToken: newToken } = await refreshRes.json();
 
-  const { accessToken: newToken } = await refreshRes.json();
+    if (newToken) localStorage.setItem("accessToken", newToken);
 
-  if (newToken) localStorage.setItem("accessToken", newToken);
-
-  res = await doFetch(newToken);
-
-  if (!res.ok) {
-    throw new Error("데이터를 가져오는 데에 실패하였습니다.");
+    res = await doFetch(newToken);
   }
 
   return res.json();

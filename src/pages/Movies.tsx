@@ -1,7 +1,7 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
-import { movieSearch, discoverMovies, movieGenres } from "../utils/tmdbUtils";
+import { movieSearch, discoverMovies, movieGenres } from "../api/tmdb/tmdb";
 import LoadingSpinner from "../components/LoadingSpinner";
 import MovieCard from "../components/MovieCard";
 import PageNav from "../components/PageNav";

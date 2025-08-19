@@ -4,6 +4,11 @@ import Stars from "../../../components/Stars";
 import { SeasonDetailProps } from "../../../types/tv";
 import IconImage from "../../../components/IconImage";
 import { ImTv } from "react-icons/im";
+import ReviewSection from "../../../components/ReviewSection";
+import { getContentId } from "../../../api/backend/getContent";
+import { useQuery } from "@tanstack/react-query";
+import { createContentEpisode } from "../../../api/backend/createContent";
+import { GenreProps } from "../../../types/tmdb";
 
 const Container = styled.div``;
 
@@ -54,40 +59,72 @@ const Overview = styled.p`
 
 const TvEpisode = () => {
   const { episodeNumber } = useParams();
-  const { season } = useOutletContext<{ season: SeasonDetailProps }>();
+  const { season, seasonId, platformId, genres, saveSeason } =
+    useOutletContext<{
+      season: SeasonDetailProps;
+      seasonId: string | null;
+      platformId: string | null;
+      genres: GenreProps[];
+      saveSeason: (() => Promise<string>) | undefined;
+    }>();
   const episode = season.episodes.find(
     (ep) => ep.episode_number === Number(episodeNumber)
   );
+
+  const { data: episodeId, refetch } = useQuery<string | null>({
+    queryKey: ["contentId", "TMDB", season.id, episodeNumber],
+    queryFn: () =>
+      platformId ? getContentId(platformId, `episode_${episode!.id}`) : null,
+    enabled: !!platformId,
+  });
 
   if (!episode)
     return <Container>선택된 에피소드가 존재하지 않습니다.</Container>;
 
   return (
-    <Container>
-      <Header>
-        <HeaderInfo>
-          <Title>{episode.name}</Title>
-          <Subtitle>
-            시즌 {episode.season_number} · {episode.episode_number}화
-          </Subtitle>
-          <Stars score={episode.vote_average} showScore={true} />
+    <>
+      <Container>
+        <Header>
+          <HeaderInfo>
+            <Title>{episode.name}</Title>
+            <Subtitle>
+              시즌 {episode.season_number} · {episode.episode_number}화
+            </Subtitle>
+            <Stars score={episode.vote_average} showScore={true} />
 
-          <Meta>방영일: {episode.air_date}</Meta>
-          <Meta>런타임: {episode.runtime}분</Meta>
-        </HeaderInfo>
-        <ThumbnailWrapper>
-          {episode.still_path ? (
-            <Thumbnail
-              src={`https://image.tmdb.org/t/p/w500${episode.still_path}`}
-            />
-          ) : (
-            <IconImage Icon={ImTv} size={55} />
-          )}
-        </ThumbnailWrapper>
-      </Header>
+            <Meta>방영일: {episode.air_date}</Meta>
+            <Meta>런타임: {episode.runtime}분</Meta>
+          </HeaderInfo>
+          <ThumbnailWrapper>
+            {episode.still_path ? (
+              <Thumbnail
+                src={`https://image.tmdb.org/t/p/w500${episode.still_path}`}
+              />
+            ) : (
+              <IconImage Icon={ImTv} size={55} />
+            )}
+          </ThumbnailWrapper>
+        </Header>
 
-      <Overview>{episode.overview}</Overview>
-    </Container>
+        <Overview>{episode.overview}</Overview>
+      </Container>
+      {saveSeason && (
+        <ReviewSection
+          id={episodeId}
+          idRefetch={refetch}
+          saveContent={async () => {
+            const parentId = seasonId ? seasonId : await saveSeason();
+            const content = await createContentEpisode(
+              parentId,
+              platformId!,
+              episode,
+              genres
+            );
+            return content.id;
+          }}
+        />
+      )}
+    </>
   );
 };
 

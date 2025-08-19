@@ -6,6 +6,7 @@ import { ImTv } from "react-icons/im";
 import { Link } from "react-router-dom";
 import FadeInImageCard from "../../../components/FadeInImageCard";
 import { SeasonDetailProps } from "../../../types/tv";
+import ReviewSection from "../../../components/ReviewSection";
 
 const Container = styled.div`
   display: flex;
@@ -112,58 +113,72 @@ const EpisodeImg = styled.img`
 `;
 
 const TvSeason = () => {
-  const { season } = useOutletContext<{ season: SeasonDetailProps }>();
+  const { season, seasonId, idRefetch, saveSeason } = useOutletContext<{
+    season: SeasonDetailProps;
+    seasonId: string | null;
+    idRefetch: () => void;
+    saveSeason: (() => Promise<string>) | undefined;
+  }>();
 
   const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 
   return (
-    <Container>
-      <PosterWrapper>
-        {season.poster_path ? (
-          <Poster
-            src={`${IMAGE_BASE}/${season.poster_path}`}
-            alt={`${season.name}`}
-          />
-        ) : (
-          <IconImage Icon={ImTv} size={55} />
-        )}
-      </PosterWrapper>
-      <InfoSection>
-        <Title>{season.name}</Title>
-        <SubTitle>{`시즌 ${season.season_number}`}</SubTitle>
+    <>
+      <Container>
+        <PosterWrapper>
+          {season.poster_path ? (
+            <Poster
+              src={`${IMAGE_BASE}/${season.poster_path}`}
+              alt={`${season.name}`}
+            />
+          ) : (
+            <IconImage Icon={ImTv} size={55} />
+          )}
+        </PosterWrapper>
+        <InfoSection>
+          <Title>{season.name}</Title>
+          <SubTitle>{`시즌 ${season.season_number}`}</SubTitle>
 
-        <Stars score={season.vote_average} showScore={true} />
+          <Stars score={season.vote_average} showScore={true} />
 
-        <Overview>{season.overview}</Overview>
+          <Overview>{season.overview}</Overview>
 
-        <Contents>
-          {season.episodes.length === 0 && <div>에피소드가 없습니다.</div>}
-          <Episodes>
-            {season.episodes.map((episode) => (
-              <FadeInImageCard key={episode.id}>
-                <Episode to={`episodes/${episode.episode_number}`}>
-                  <EpisodeImgWrapper>
-                    {episode.still_path ? (
-                      <EpisodeImg
-                        src={`${IMAGE_BASE}/${episode.still_path}`}
-                        alt={episode.name}
-                      />
-                    ) : (
-                      <IconImage Icon={ImTv} size={55} />
+          <Contents>
+            {season.episodes.length === 0 && <div>에피소드가 없습니다.</div>}
+            <Episodes>
+              {season.episodes.map((episode) => (
+                <FadeInImageCard key={episode.id}>
+                  <Episode to={`episodes/${episode.episode_number}`}>
+                    <EpisodeImgWrapper>
+                      {episode.still_path ? (
+                        <EpisodeImg
+                          src={`${IMAGE_BASE}/${episode.still_path}`}
+                          alt={episode.name}
+                        />
+                      ) : (
+                        <IconImage Icon={ImTv} size={55} />
+                      )}
+                    </EpisodeImgWrapper>
+                    <EpisodeNumber>{episode.episode_number}화</EpisodeNumber>
+                    <EpisodeTitle>{episode.name}</EpisodeTitle>
+                    {episode.runtime && (
+                      <EpisodeRuntime>{episode.runtime} 분</EpisodeRuntime>
                     )}
-                  </EpisodeImgWrapper>
-                  <EpisodeNumber>{episode.episode_number}화</EpisodeNumber>
-                  <EpisodeTitle>{episode.name}</EpisodeTitle>
-                  {episode.runtime && (
-                    <EpisodeRuntime>{episode.runtime} 분</EpisodeRuntime>
-                  )}
-                </Episode>
-              </FadeInImageCard>
-            ))}
-          </Episodes>
-        </Contents>
-      </InfoSection>
-    </Container>
+                  </Episode>
+                </FadeInImageCard>
+              ))}
+            </Episodes>
+          </Contents>
+        </InfoSection>
+      </Container>
+      {saveSeason && (
+        <ReviewSection
+          id={seasonId}
+          idRefetch={idRefetch}
+          saveContent={saveSeason}
+        />
+      )}
+    </>
   );
 };
 

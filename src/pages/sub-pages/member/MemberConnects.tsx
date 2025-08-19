@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import requestAutoRefresh from "../../utils/requestAutoRefresh";
 import { useOutletContext } from "react-router-dom";
-import { Member } from "../../hooks/useMember";
-import { APIPageResponse } from "../../types/api";
+import { MemberDetailResponse } from "../../../types/member";
 import styled from "styled-components";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import { APIPageResponse } from "../../../types/api";
+import requestAutoRefresh from "../../../utils/requestAutoRefresh";
+import LoadingSpinner from "../../../components/LoadingSpinner";
 
 type PlatformName = "디스코드" | "구글";
 
@@ -121,7 +121,7 @@ const PageNav = styled.div`
 const Page = styled.div``;
 
 const MemberConnects = () => {
-  const { member } = useOutletContext<{ member: Member }>();
+  const { member } = useOutletContext<{ member: MemberDetailResponse }>();
   const { data: connects, isLoading } = useQuery<
     APIPageResponse<MemberPlatform>
   >({

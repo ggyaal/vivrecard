@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { movieCollection } from "../utils/tmdbUtils";
+import { movieCollection } from "../api/tmdb/tmdb";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { Helmet } from "react-helmet-async";
 import { LuPopcorn } from "react-icons/lu";
@@ -34,7 +34,7 @@ const Wrapper = styled.div`
   width: 100%;
   position: absolute;
   top: 100%;
-  transform: translateY(-50%);
+  transform: translateY(-300px);
   max-width: 1200px;
   padding: 30px;
   color: ${({ theme }) => theme.content.text};

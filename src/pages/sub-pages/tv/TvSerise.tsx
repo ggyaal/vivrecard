@@ -1,10 +1,15 @@
-import { Outlet, useOutletContext } from "react-router-dom";
+import { Outlet, useLocation, useOutletContext } from "react-router-dom";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import Stars from "../../../components/Stars";
 import { ImTv } from "react-icons/im";
 import IconImage from "../../../components/IconImage";
 import { TvDetailProps } from "../../../types/tv";
+import ReviewSection from "../../../components/ReviewSection";
+import { getPlatformId } from "../../../api/backend/getPlatform";
+import { getContentId } from "../../../api/backend/getContent";
+import { createContentSeries } from "../../../api/backend/createContent";
+import { useQuery } from "@tanstack/react-query";
 
 const Container = styled.div`
   display: flex;
@@ -79,46 +84,67 @@ const MenuItem = styled(NavLink)`
 const Meta = styled.div``;
 
 const TvSerise = () => {
+  const { search } = useLocation();
   const { tv } = useOutletContext<{ tv: TvDetailProps }>();
+  const { data: platformId } = useQuery<string | null>({
+    queryKey: ["platformId", "TMDB"],
+    queryFn: () => getPlatformId("TMDB"),
+  });
+  const { data: contentId, refetch } = useQuery<string | null>({
+    queryKey: ["contentId", "TMDB", tv.id],
+    queryFn: () =>
+      platformId ? getContentId(platformId, `tv_${tv.id}`) : null,
+    enabled: !!platformId,
+  });
 
   const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 
   if (!tv) return <div>TV 정보가 없습니다.</div>;
 
   return (
-    <Container>
-      <PosterWrapper>
-        {tv.poster_path ? (
-          <Poster src={`${IMAGE_BASE}/${tv.poster_path}`} alt={tv.name} />
-        ) : (
-          <IconImage Icon={ImTv} size={55} />
-        )}
-      </PosterWrapper>
-      <InfoSection>
-        <Title>{tv.name}</Title>
-        <SubTitle>{tv.original_name}</SubTitle>
-        {tv.tagline && <Tagline>"{tv.tagline}"</Tagline>}
+    <>
+      <Container>
+        <PosterWrapper>
+          {tv.poster_path ? (
+            <Poster src={`${IMAGE_BASE}/${tv.poster_path}`} alt={tv.name} />
+          ) : (
+            <IconImage Icon={ImTv} size={55} />
+          )}
+        </PosterWrapper>
+        <InfoSection>
+          <Title>{tv.name}</Title>
+          <SubTitle>{tv.original_name}</SubTitle>
+          {tv.tagline && <Tagline>"{tv.tagline}"</Tagline>}
 
-        <Stars score={tv.vote_average} showScore={true} />
+          <Stars score={tv.vote_average} showScore={true} />
 
-        <Genres>
-          {tv.genres.map((genre) => (
-            <span key={genre.id}>{genre.name}</span>
-          ))}
-        </Genres>
+          <Genres>
+            {tv.genres.map((genre) => (
+              <span key={genre.id}>{genre.name}</span>
+            ))}
+          </Genres>
 
-        <Menu>
-          <MenuItem to="." end>
-            작품 소개
-          </MenuItem>
-          <MenuItem to="seasons">시즌</MenuItem>
-        </Menu>
+          <Menu>
+            <MenuItem to={{ pathname: ".", search }} end>
+              작품 소개
+            </MenuItem>
+            <MenuItem to={{ pathname: "seasons", search }}>시즌</MenuItem>
+          </Menu>
 
-        <Meta>
-          <Outlet context={{ tv }} />
-        </Meta>
-      </InfoSection>
-    </Container>
+          <Meta>
+            <Outlet context={{ tv }} />
+          </Meta>
+        </InfoSection>
+      </Container>
+      <ReviewSection
+        id={contentId}
+        idRefetch={refetch}
+        saveContent={async () => {
+          const content = await createContentSeries(platformId!, tv);
+          return content.id;
+        }}
+      />
+    </>
   );
 };
 

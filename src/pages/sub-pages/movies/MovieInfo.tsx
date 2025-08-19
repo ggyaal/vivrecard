@@ -1,10 +1,15 @@
-import { Outlet, useOutletContext } from "react-router-dom";
+import { Outlet, useLocation, useOutletContext } from "react-router-dom";
 import styled from "styled-components";
 import Stars from "../../../components/Stars";
 import IconImage from "../../../components/IconImage";
 import { LuPopcorn } from "react-icons/lu";
 import { NavLink } from "react-router-dom";
 import { MovieDetailProps } from "../../../types/movie";
+import { useQuery } from "@tanstack/react-query";
+import { getPlatformId } from "../../../api/backend/getPlatform";
+import { getContentId } from "../../../api/backend/getContent";
+import ReviewSection from "../../../components/ReviewSection";
+import { createContentMovie } from "../../../api/backend/createContent";
 
 const Container = styled.div`
   display: flex;
@@ -80,46 +85,70 @@ const MenuItem = styled(NavLink)`
 const Meta = styled.div``;
 
 const MovieInfo = () => {
+  const { search } = useLocation();
   const { movie } = useOutletContext<{ movie: MovieDetailProps }>();
+  const { data: platformId } = useQuery<string | null>({
+    queryKey: ["platformId", "TMDB"],
+    queryFn: () => getPlatformId("TMDB"),
+  });
+  const { data: contentId, refetch } = useQuery<string | null>({
+    queryKey: ["contentId", "TMDB", movie.id],
+    queryFn: () =>
+      platformId ? getContentId(platformId, `movie_${movie.id}`) : null,
+    enabled: !!platformId,
+  });
 
   const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 
   if (!movie) return <div>영화 정보가 없습니다.</div>;
 
   return (
-    <Container>
-      <PosterWrapper>
-        {movie.poster_path ? (
-          <Poster src={`${IMAGE_BASE}${movie.poster_path}`} alt={movie.title} />
-        ) : (
-          <IconImage background="#A9A9A9" Icon={LuPopcorn} size={75} />
-        )}
-      </PosterWrapper>
-      <InfoSection>
-        <Title>{movie.title}</Title>
-        {movie.original_title && <SubTitle>{movie.original_title}</SubTitle>}
-        {movie.tagline && <Tagline>"{movie.tagline}"</Tagline>}
+    <>
+      <Container>
+        <PosterWrapper>
+          {movie.poster_path ? (
+            <Poster
+              src={`${IMAGE_BASE}${movie.poster_path}`}
+              alt={movie.title}
+            />
+          ) : (
+            <IconImage background="#A9A9A9" Icon={LuPopcorn} size={75} />
+          )}
+        </PosterWrapper>
+        <InfoSection>
+          <Title>{movie.title}</Title>
+          {movie.original_title && <SubTitle>{movie.original_title}</SubTitle>}
+          {movie.tagline && <Tagline>"{movie.tagline}"</Tagline>}
 
-        <Stars score={movie.vote_average} showScore={true} />
+          <Stars score={movie.vote_average} showScore={true} />
 
-        <Genres>
-          {movie.genres.map((genre) => (
-            <span key={genre.id}>{genre.name}</span>
-          ))}
-        </Genres>
+          <Genres>
+            {movie.genres.map((genre) => (
+              <span key={genre.id}>{genre.name}</span>
+            ))}
+          </Genres>
 
-        <Menu>
-          <MenuItem to="." end>
-            작품 소개
-          </MenuItem>
-          <MenuItem to="collection">시리즈</MenuItem>
-        </Menu>
+          <Menu>
+            <MenuItem to={{ pathname: ".", search }} end>
+              작품 소개
+            </MenuItem>
+            <MenuItem to={{ pathname: "collection", search }}>시리즈</MenuItem>
+          </Menu>
 
-        <Meta>
-          <Outlet context={{ movie }} />
-        </Meta>
-      </InfoSection>
-    </Container>
+          <Meta>
+            <Outlet context={{ movie }} />
+          </Meta>
+        </InfoSection>
+      </Container>
+      <ReviewSection
+        id={contentId}
+        idRefetch={refetch}
+        saveContent={async () => {
+          const content = await createContentMovie(platformId!, movie);
+          return content.id;
+        }}
+      />
+    </>
   );
 };
 
