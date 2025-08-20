@@ -46,7 +46,9 @@ const requestAutoRefresh = async <T = any>({
       throw new Error("토큰 갱신에 실패하였습니다. 다시 로그인해주세요.");
     }
 
-    const { accessToken: newToken } = await refreshRes.json();
+    const {
+      data: { accessToken: newToken },
+    } = await refreshRes.json();
 
     if (newToken) localStorage.setItem("accessToken", newToken);
 
