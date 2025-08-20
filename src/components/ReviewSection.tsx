@@ -130,6 +130,7 @@ const ReviewComment = styled.div`
   padding: 20px;
   border-radius: 5px;
   box-shadow: 1px 1px 15px ${({ theme }) => theme.colors.shadow};
+  white-space: pre;
 `;
 
 const ReviewDate = styled.div`
