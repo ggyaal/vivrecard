@@ -105,6 +105,10 @@ const Rewards = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Rewards</title>
+        <meta name="description" content="Rewards page of Vivre Card" />
+      </Helmet>
       <Container>
         <Wrapper>
           <Title>도전과제</Title>
