@@ -58,8 +58,11 @@ const Title = styled.h2`
 `;
 
 const Description = styled.p`
+  max-height: 500px;
   margin: 0;
   line-height: 1.55;
+  white-space: pre;
+  overflow-y: auto;
 `;
 
 const Section = styled.section`
@@ -84,6 +87,16 @@ const BadgeBox = styled.div`
   color: ${({ theme }) => theme.card.info.text};
 `;
 
+const ExpBox = styled.div`
+  border: 1px solid ${({ theme }) => theme.card.warn.border};
+  border-radius: 12px;
+  padding: 12px;
+  background-color: ${({ theme }) => theme.card.warn.background};
+  color: ${({ theme }) => theme.card.warn.text};
+  font-size: 14px;
+  font-weight: 600;
+`;
+
 const BadgeIconWrapper = styled.div`
   width: 56px;
   height: 56px;
@@ -96,6 +109,7 @@ const BadgeIconWrapper = styled.div`
 
 const BadgeIcon = styled.img`
   width: 100%;
+  font-size: 12px;
 `;
 
 const KeyValue = styled.div`
@@ -104,7 +118,7 @@ const KeyValue = styled.div`
   font-size: 14px;
   span {
     font-size: 12px;
-    color: #5a6275;
+    color: ${({ theme }) => theme.card.basic.paleText};
   }
 `;
 
@@ -160,9 +174,9 @@ const RewardInfo = ({ id }: { id: string }) => {
         </Section>
       )}
 
-      {reward.reward && (
-        <Section aria-label="Badge Reward">
-          <SectionTitle>보상🏅</SectionTitle>
+      <Section aria-label="Badge Reward">
+        <SectionTitle>보상🏅</SectionTitle>
+        {reward.reward ? (
           <BadgeBox>
             <BadgeIconWrapper aria-hidden>
               <BadgeIcon src={reward.reward?.icon} alt={reward.reward?.name} />
@@ -172,8 +186,10 @@ const RewardInfo = ({ id }: { id: string }) => {
               <span>{`${reward.reward.exp ?? "—"} EXP`}</span>
             </KeyValue>
           </BadgeBox>
-        </Section>
-      )}
+        ) : (
+          <ExpBox>{`${reward.exp ?? "-"} EXP`}</ExpBox>
+        )}
+      </Section>
 
       <Divider />
 

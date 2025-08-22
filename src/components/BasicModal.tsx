@@ -34,7 +34,7 @@ const Backdrop = styled.div`
 `;
 
 const Dialog = styled.div`
-  width: min(560px, 92vw);
+  width: fit-content;
   max-height: 80vh;
   overflow: auto;
   background-color: ${({ theme }) => theme.card.basic.background};

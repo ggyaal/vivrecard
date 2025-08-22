@@ -6,6 +6,7 @@ import { Helmet } from "react-helmet-async";
 import BasicModal from "../components/BasicModal";
 import { useState } from "react";
 import RewardInfo from "../components/RewardInfo";
+import { RewardType } from "../types/rewardType";
 
 const Container = styled.main`
   display: flex;
@@ -114,7 +115,9 @@ const Rewards = () => {
               <Card key={reward.id} onClick={() => setSelectedId(reward.id)}>
                 <CardTitle>{reward.title}</CardTitle>
                 <CardMeta>
-                  <CardReward>{reward.rewardType}</CardReward>
+                  {reward.rewardType !== RewardType.NONE && (
+                    <CardReward>{reward.rewardType}</CardReward>
+                  )}
                   <Exp>EXP +{reward.exp}</Exp>
                 </CardMeta>
               </Card>
