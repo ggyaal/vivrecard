@@ -1,10 +1,13 @@
 import styled from "styled-components";
 import useMember from "../hooks/useMember";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Avatar from "../components/profiles/Avatar";
 import { getTotalExp } from "../utils/memberUtils";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { NavLink } from "react-router-dom";
+
+type LevelBucket = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 const Container = styled.main`
   display: flex;
@@ -15,6 +18,7 @@ const Container = styled.main`
 
 const Wrapper = styled.div`
   padding: 32px;
+  width: 100%;
   min-width: 800px;
   color: ${({ theme }) => theme.colors.text};
 `;
@@ -57,11 +61,11 @@ const LevelInfo = styled.div`
   margin-top: 20px;
 `;
 
-const Level = styled.div`
+const Level = styled.div<{ $level: LevelBucket }>`
   width: 60px;
   height: 50px;
-  background: ${({ theme }) => theme.colors.secondary};
-  color: ${({ theme }) => theme.colors.text};
+  background: ${({ theme, $level }) => theme.member.level[$level].background};
+  color: ${({ theme, $level }) => theme.member.level[$level].text};
   font-weight: 600;
   border-radius: 8px;
   display: flex;
@@ -95,7 +99,7 @@ const Divider = styled.hr`
 
 const Nav = styled.nav``;
 
-const NavUl = styled.ul`
+const NavUl = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -104,16 +108,17 @@ const NavUl = styled.ul`
   overflow: hidden;
 `;
 
-const NavItem = styled.li<{ $active: boolean }>`
+const NavItem = styled(NavLink)`
   flex: 1;
   height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: ${({ $active }) => ($active ? "default" : "pointer")};
   transition: background-color 0.3s ease;
-  background-color: ${({ $active, theme }) =>
-    $active ? theme.colors.sidebar : "transparent"};
+
+  &.active {
+    background-color: ${({ theme }) => theme.colors.sidebar};
+  }
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.sidebar};
@@ -122,18 +127,9 @@ const NavItem = styled.li<{ $active: boolean }>`
 
 const Member = () => {
   const { id } = useParams();
-  const { pathname } = useLocation();
-  const isSelf = id !== "me";
-  const { data: member, isLoading } = useMember(
-    isSelf
-      ? {
-          id,
-        }
-      : undefined
-  );
+  const isSelf = id === "me";
+  const { data: member, isLoading } = useMember(isSelf ? undefined : { id });
   const navigate = useNavigate();
-
-  const isActive = (tab: string) => pathname.endsWith(tab);
 
   if (isLoading) {
     return (
@@ -163,6 +159,12 @@ const Member = () => {
     );
   }
 
+  const toBucket = (level: number): LevelBucket => {
+    const b = Math.floor(level / 10);
+    const clamped = Math.max(0, Math.min(9, b));
+    return clamped as LevelBucket;
+  };
+
   return (
     <>
       <Helmet>
@@ -180,7 +182,7 @@ const Member = () => {
                 <Email>{member.email}</Email>
               </Top>
               <LevelInfo>
-                <Level>Lv.{member.level}</Level>
+                <Level $level={toBucket(member.level)}>Lv.{member.level}</Level>
                 <ExpBar>
                   <ExpFill style={{ width: `${member.exp % 100}%` }} />
                 </ExpBar>
@@ -195,24 +197,11 @@ const Member = () => {
 
           <Nav>
             <NavUl>
-              <NavItem
-                $active={isActive("badges")}
-                onClick={() => navigate("badges")}
-              >
+              <NavItem to={{ pathname: "." }} end>
                 배지
               </NavItem>
-              <NavItem
-                $active={isActive("connects")}
-                onClick={() => navigate("connects")}
-              >
-                연결
-              </NavItem>
-              <NavItem
-                $active={isActive("reviews")}
-                onClick={() => navigate("reviews")}
-              >
-                후기
-              </NavItem>
+              {isSelf && <NavItem to={{ pathname: "connects" }}>연결</NavItem>}
+              <NavItem to={{ pathname: "reviews" }}>후기</NavItem>
             </NavUl>
           </Nav>
           <Outlet context={{ member }} />

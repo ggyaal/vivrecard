@@ -8,6 +8,7 @@ import {
 import { HiMoon } from "react-icons/hi2";
 import { BsCameraReels, BsCameraReelsFill } from "react-icons/bs";
 import { TbDeviceTvOld, TbDeviceTvOldFilled } from "react-icons/tb";
+import { PiMedal, PiMedalFill } from "react-icons/pi";
 import styled from "styled-components";
 import IconButton from "./buttons/IconButton";
 import { Link, useLocation } from "react-router-dom";
@@ -100,6 +101,18 @@ const Sidebar = ({ isDark, toggleTheme }: SidebarProps) => {
             ariaLabel="Home"
             selected={location.pathname.startsWith("/tvs")}
             disabled={location.pathname === "/tvs"}
+          />
+        </Link>
+      </MenuItem>
+      <MenuItem>
+        <Link to="/rewards">
+          <IconButton
+            icon={PiMedal}
+            hoverIcon={PiMedalFill}
+            size={30}
+            ariaLabel="Home"
+            selected={location.pathname.startsWith("/rewards")}
+            disabled={location.pathname === "/rewards"}
           />
         </Link>
       </MenuItem>

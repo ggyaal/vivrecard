@@ -69,7 +69,7 @@ const Menu = styled.div`
 const MenuItem = styled(NavLink)`
   position: relative;
   background-color: ${({ theme }) => theme.content.block.background};
-  color: ${({ theme }) => theme.content.block.text};
+  color: ${({ theme }) => theme.button.tertiary.text};
   padding: 15px 50px;
   display: flex;
   justify-content: center;
@@ -77,7 +77,7 @@ const MenuItem = styled(NavLink)`
   transition: background-color 0.3s ease-in-out;
 
   &.active {
-    background-color: ${({ theme }) => theme.content.tag.secondary};
+    background-color: ${({ theme }) => theme.button.primary.background};
   }
 `;
 
@@ -85,16 +85,16 @@ const Meta = styled.div``;
 
 const TvSerise = () => {
   const { search } = useLocation();
-  const { tv } = useOutletContext<{ tv: TvDetailProps }>();
+  const { tv } = useOutletContext<{ tv: TvDetailProps | undefined }>();
   const { data: platformId } = useQuery<string | null>({
     queryKey: ["platformId", "TMDB"],
     queryFn: () => getPlatformId("TMDB"),
   });
   const { data: contentId, refetch } = useQuery<string | null>({
-    queryKey: ["contentId", "TMDB", tv.id],
+    queryKey: ["contentId", "TMDB", tv?.id],
     queryFn: () =>
-      platformId ? getContentId(platformId, `tv_${tv.id}`) : null,
-    enabled: !!platformId,
+      platformId ? getContentId(platformId, `tv_${tv!.id}`) : null,
+    enabled: !!tv && !!platformId,
   });
 
   const IMAGE_BASE = "https://image.tmdb.org/t/p/original";

@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import FadeInImageCard from "../components/FadeInImageCard";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { CollectionProps } from "../types/movie";
+import { useEffect } from "react";
 
 const Container = styled.main`
   display: flex;
@@ -158,8 +159,13 @@ const CardImg = styled.img`
 
 const Collection = () => {
   const { id } = useParams();
+  const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
   const navigate = useNavigate();
-  const { data: collection, isLoading } = useQuery<CollectionProps>({
+  const {
+    data: collection,
+    isLoading,
+    isError,
+  } = useQuery<CollectionProps>({
     queryKey: ["collection", Number(id)],
     queryFn: () => {
       const collectionId = Number(id);
@@ -167,9 +173,13 @@ const Collection = () => {
         throw new Error("Collection ID is not available");
       return movieCollection(collectionId);
     },
+    retry: false,
+    enabled: !!id,
   });
 
-  const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
+  useEffect(() => {
+    if (isError) navigate("/404");
+  }, [isError, navigate]);
 
   if (isLoading) return <LoadingSpinner />;
 

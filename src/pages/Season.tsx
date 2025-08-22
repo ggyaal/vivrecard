@@ -15,8 +15,9 @@ const Season = () => {
   const { number } = useParams();
   const { tv } = useOutletContext<{ tv: TvDetailProps }>();
   const { data: season, isLoading } = useQuery<SeasonDetailProps>({
-    queryKey: ["tv", tv.id, "season", number],
+    queryKey: ["tv", tv?.id, "season", number],
     queryFn: () => seasonDetail(tv.id, Number(number)),
+    enabled: !!tv,
   });
 
   const { data: platformId, isLoading: platformIdLoading } = useQuery<
@@ -27,10 +28,10 @@ const Season = () => {
   });
 
   const { data: seasonId, refetch } = useQuery<string | null>({
-    queryKey: ["contentId", "TMDB", tv.id],
+    queryKey: ["contentId", "TMDB", tv?.id],
     queryFn: () =>
       platformId ? getContentId(platformId, `season_${season!.id}`) : null,
-    enabled: !!platformId && !!season,
+    enabled: !!tv && !!platformId && !!season,
   });
 
   if (isLoading) return <LoadingSpinner />;

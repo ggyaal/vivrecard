@@ -28,6 +28,7 @@ export const GlobalStyles = createGlobalStyle`
     background-color: ${({ theme }) => theme.colors.background};
     font-family: "Noto Sans KR", sans-serif;
     font-weight: 400;
+    color: ${({ theme }) => theme.colors.text};
     cursor: default;
   }
 

@@ -6,6 +6,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import { Helmet } from "react-helmet-async";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { TvDetailProps } from "../types/tv";
+import { useEffect } from "react";
 
 const Container = styled.main`
   display: flex;
@@ -57,41 +58,36 @@ const ToolButton = styled(IoMdArrowRoundBack)`
 const Tv = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: tv, isLoading } = useQuery<TvDetailProps>({
+  const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
+  const {
+    data: tv,
+    isLoading,
+    isError,
+  } = useQuery<TvDetailProps>({
     queryKey: ["tv", id],
     queryFn: () => {
       const idNumber = Number(id);
-      if (isNaN(idNumber)) throw new Error("잘못된 인자입니다.");
+      if (isNaN(idNumber)) throw new Error("Invalid TV ID");
       return tvDetail(idNumber);
     },
+    retry: false,
+    enabled: !!id,
   });
 
+  useEffect(() => {
+    if (isError) navigate("/404");
+  }, [isError, navigate]);
+
   if (isLoading) return <LoadingSpinner />;
-
-  if (!tv) {
-    return (
-      <>
-        <Helmet>
-          <title>TV</title>
-          <meta name="description" content="TV page of Vivre Card" />
-        </Helmet>
-        <Container>
-          <div>서버 연결에 문제가 발생하였습니다.</div>
-        </Container>
-      </>
-    );
-  }
-
-  const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 
   return (
     <>
       <Helmet>
-        <title>{tv.name}</title>
+        <title>{tv ? tv.name : "TV"}</title>
         <meta name="description" content="Tv page of Vivre Card" />
       </Helmet>
       <Container>
-        <Backdrop $url={`${IMAGE_BASE}/${tv.backdrop_path}`}>
+        <Backdrop $url={`${IMAGE_BASE}/${tv?.backdrop_path}`}>
           <Wrapper>
             <Toolbar>
               <ToolButton size={32} onClick={() => navigate(-1)} />

@@ -88,7 +88,7 @@ const Episode = styled(Link)`
 
 const EpisodeNumber = styled.div`
   font-size: 14px;
-  color: ${({ theme }) => theme.content.tag.secondary};
+  color: ${({ theme }) => theme.content.tag.blue.text};
   margin: 5px 0;
 `;
 

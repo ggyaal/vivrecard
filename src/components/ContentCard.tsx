@@ -4,7 +4,15 @@ import IconImage from "./IconImage";
 import { TbDeviceTvOff } from "react-icons/tb";
 import { FaStar } from "react-icons/fa";
 import FadeInImageCard from "./FadeInImageCard";
-import { TvSimpleProps } from "../types/tv";
+
+interface ContentCardProps {
+  id: number;
+  path: string;
+  name: string;
+  posterPath: string | null;
+  firstDate: string;
+  voteAverage: number;
+}
 
 const Container = styled(Link)`
   min-width: 150px;
@@ -12,10 +20,12 @@ const Container = styled(Link)`
 
 const Card = styled.div`
   width: 100%;
+  border: 1px solid ${({ theme }) => theme.card.basic.border};
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  background: #fff;
+  box-shadow: 0 2px 8px ${({ theme }) => theme.card.basic.shadow};
+  background: ${({ theme }) => theme.card.basic.background};
+  color: ${({ theme }) => theme.card.basic.text};
   transition: all 0.2s ease;
   filter: brightness(0.8);
   cursor: pointer;
@@ -50,7 +60,7 @@ const Title = styled.h3`
 
 const SubInfo = styled.div`
   font-size: 10px;
-  color: #666;
+  color: ${({ theme }) => theme.card.basic.paleText};
   margin-bottom: 4px;
 `;
 
@@ -59,34 +69,40 @@ const Rating = styled.span`
   align-items: center;
   font-size: 10px;
   font-weight: bold;
-  color: #f39c12;
+  color: ${({ theme }) => theme.content.star};
 
   & > svg:not(:last-child) {
     margin-right: 5px;
   }
 `;
 
-const TvCard = ({ tv }: { tv: TvSimpleProps }) => {
+const ContentCard = ({
+  id,
+  path,
+  name,
+  posterPath,
+  firstDate,
+  voteAverage,
+}: ContentCardProps) => {
+  const BASE_URL = "https://image.tmdb.org/t/p/w500";
+
   return (
-    <Container to={`/tvs/${tv.id}`}>
+    <Container to={path}>
       <FadeInImageCard>
         <Card>
           <PosterWrapper>
-            {tv.poster_path ? (
-              <Poster
-                src={`https://image.tmdb.org/t/p/w500${tv.poster_path}`}
-                alt={tv.name}
-              />
+            {posterPath ? (
+              <Poster src={`${BASE_URL}${posterPath}`} alt={name} />
             ) : (
               <IconImage Icon={TbDeviceTvOff} size={55} />
             )}
           </PosterWrapper>
           <Info>
-            <Title>{tv.name}</Title>
-            <SubInfo>{tv.first_air_date}</SubInfo>
+            <Title>{name}</Title>
+            <SubInfo>{firstDate}</SubInfo>
             <Rating>
               <FaStar size={12} />
-              <span>{tv.vote_average.toFixed(1)}</span>
+              <span>{voteAverage.toFixed(1)}</span>
             </Rating>
           </Info>
         </Card>
@@ -95,4 +111,4 @@ const TvCard = ({ tv }: { tv: TvSimpleProps }) => {
   );
 };
 
-export default TvCard;
+export default ContentCard;

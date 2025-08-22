@@ -23,6 +23,8 @@ import MovieInfo from "./pages/sub-pages/movies/MovieInfo";
 import MovieOverview from "./pages/sub-pages/movies/MovieOverview";
 import MovieCollection from "./pages/sub-pages/movies/MovieCollection";
 import Collection from "./pages/Collection";
+import Rewards from "./pages/Rewards";
+import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter([
   {
@@ -42,7 +44,7 @@ const router = createBrowserRouter([
         element: <Member />,
         children: [
           {
-            path: "badges",
+            index: true,
             element: <MemberBadges />,
           },
           {
@@ -135,8 +137,16 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: "rewards",
+        element: <Rewards />,
+      },
+      {
+        path: "*",
+        element: <NotFound />,
+      },
     ],
-    errorElement: <NotFound />,
+    errorElement: <ErrorPage />,
   },
 ]);
 

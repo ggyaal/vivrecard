@@ -6,7 +6,8 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme }) => theme.content.tag.primary};
+  background-color: ${({ theme }) => theme.content.tag.yellow.background};
+  color: ${({ theme }) => theme.content.tag.yellow.text};
   border-radius: 30px;
 `;
 

@@ -70,7 +70,7 @@ const Menu = styled.div`
 const MenuItem = styled(NavLink)`
   position: relative;
   background-color: ${({ theme }) => theme.content.block.background};
-  color: ${({ theme }) => theme.content.block.text};
+  color: ${({ theme }) => theme.button.primary.text};
   padding: 15px 50px;
   display: flex;
   justify-content: center;
@@ -78,7 +78,7 @@ const MenuItem = styled(NavLink)`
   transition: background-color 0.3s ease-in-out;
 
   &.active {
-    background-color: ${({ theme }) => theme.content.tag.secondary};
+    background-color: ${({ theme }) => theme.button.primary.background};
   }
 `;
 

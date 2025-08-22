@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
 import { movieSearch, discoverMovies, movieGenres } from "../api/tmdb/tmdb";
 import LoadingSpinner from "../components/LoadingSpinner";
-import MovieCard from "../components/MovieCard";
+import ContentCard from "../components/ContentCard";
 import PageNav from "../components/PageNav";
 import { useSearchParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
@@ -184,7 +184,15 @@ const Movies = () => {
           {movies.results.length > 0 ? (
             <MovieList>
               {movies.results.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
+                <ContentCard
+                  key={movie.id}
+                  id={movie.id}
+                  path={`/movies/${movie.id}`}
+                  name={movie.title}
+                  posterPath={movie.poster_path}
+                  firstDate={movie.release_date}
+                  voteAverage={movie.vote_average}
+                />
               ))}
             </MovieList>
           ) : (

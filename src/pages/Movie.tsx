@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { movieDetail } from "../api/tmdb/tmdb";
@@ -6,6 +6,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import { Helmet } from "react-helmet-async";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { MovieDetailProps } from "../types/movie";
+import { useEffect } from "react";
 
 const Container = styled.main`
   display: flex;
@@ -56,18 +57,25 @@ const ToolButton = styled(IoMdArrowRoundBack)`
 const Movie = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: movie, isLoading } = useQuery<MovieDetailProps>({
+  const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
+  const {
+    data: movie,
+    isLoading,
+    isError,
+  } = useQuery<MovieDetailProps>({
     queryKey: ["movie", id],
     queryFn: () => {
       const idNumber = Number(id);
       if (isNaN(idNumber)) throw new Error("잘못된 인자입니다.");
       return movieDetail(idNumber);
     },
-    placeholderData: keepPreviousData,
-    gcTime: 1000 * 60 * 3,
+    retry: false,
+    enabled: !!id,
   });
 
-  const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
+  useEffect(() => {
+    if (isError) navigate("/404");
+  }, [isError, navigate]);
 
   if (isLoading) return <LoadingSpinner />;
 

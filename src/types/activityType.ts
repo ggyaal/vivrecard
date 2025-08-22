@@ -1,0 +1,31 @@
+export enum ActivityType {
+  JOIN = "JOIN",
+  LEAVE = "LEAVE",
+  RECORD = "RECORD",
+  REMOVE = "REMOVE",
+  PLAY = "PLAY",
+  START = "START",
+  UPDATE = "UPDATE",
+  END = "END",
+  PASS = "PASS",
+  COMPLETE = "COMPLETE",
+  FAILED = "FAILED",
+  LINK = "LINK",
+  INVITE = "INVITE",
+}
+
+export const labelForActivity: Record<ActivityType, string> = {
+  [ActivityType.JOIN]: "가입",
+  [ActivityType.LEAVE]: "퇴장",
+  [ActivityType.RECORD]: "기록",
+  [ActivityType.REMOVE]: "제거",
+  [ActivityType.PLAY]: "재생",
+  [ActivityType.START]: "시작",
+  [ActivityType.UPDATE]: "업데이트",
+  [ActivityType.END]: "종료",
+  [ActivityType.PASS]: "패스",
+  [ActivityType.COMPLETE]: "완료",
+  [ActivityType.FAILED]: "실패",
+  [ActivityType.LINK]: "링크",
+  [ActivityType.INVITE]: "초대",
+};

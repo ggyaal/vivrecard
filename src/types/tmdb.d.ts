@@ -47,3 +47,9 @@ export interface PageProps<T> {
   total_pages: number;
   total_results: number;
 }
+
+export interface TMDBErrorProps {
+  status_code: number;
+  status_message: string;
+  success: boolean;
+}

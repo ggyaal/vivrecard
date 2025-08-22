@@ -17,7 +17,8 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   padding: 5px 10px;
-  background-color: ${({ theme }) => theme.content.tag.secondary};
+  background-color: ${({ theme }) => theme.content.tag.blue.background};
+  color: ${({ theme }) => theme.content.tag.blue.text};
   border-radius: 30px;
 `;
 
