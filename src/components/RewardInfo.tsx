@@ -41,6 +41,7 @@ const Chips = styled.div`
 const Chip = styled.span<{ tone?: TagColor }>`
   ${({ tone = "sky", theme }) => {
     return css`
+      border: 1px solid ${({ theme }) => theme.content.tag[tone].border};
       background: ${theme.content.tag[tone].background};
       color: ${theme.content.tag[tone].text};
     `;

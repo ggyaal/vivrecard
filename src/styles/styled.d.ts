@@ -78,31 +78,48 @@ declare module "styled-components" {
         text: string;
       };
       tag: {
+        default: {
+          border: string;
+          background: string;
+          text: string;
+        };
         red: {
+          border: string;
           background: string;
           text: string;
         };
         orange: {
+          border: string;
           background: string;
           text: string;
         };
         yellow: {
+          border: string;
           background: string;
           text: string;
         };
         green: {
+          border: string;
           background: string;
           text: string;
         };
         blue: {
+          border: string;
           background: string;
           text: string;
         };
         sky: {
+          border: string;
           background: string;
           text: string;
         };
         navy: {
+          border: string;
+          background: string;
+          text: string;
+        };
+        puple: {
+          border: string;
           background: string;
           text: string;
         };
@@ -183,6 +200,7 @@ declare module "styled-components" {
 }
 
 export type TagColor =
+  | "default"
   | "red"
   | "orange"
   | "yellow"

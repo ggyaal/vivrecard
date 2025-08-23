@@ -17,6 +17,12 @@ const BadgeList = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 `;
 
+const EmptyList = styled.div`
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+`;
+
 const MemberBadges = () => {
   const { member } = useOutletContext<{ member: MemberDetailResponse }>();
   const { data: badges, isLoading } = useQuery({
@@ -36,14 +42,14 @@ const MemberBadges = () => {
     <Container>
       <Wrapper></Wrapper>
       <Wrapper>
-        {badges ? (
+        {badges && badges.content.length > 0 ? (
           <BadgeList>
             {badges.content.map((badge) => (
               <BadgeCard key={badge.id} badge={badge} />
             ))}
           </BadgeList>
         ) : (
-          <div>획득한 배지가 없습니다.</div>
+          <EmptyList>획득한 배지가 없습니다.</EmptyList>
         )}
       </Wrapper>
     </Container>

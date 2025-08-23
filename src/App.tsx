@@ -28,7 +28,7 @@ const Main = styled.div`
 
 function App() {
   const [theme, setTheme] = useState<string>("dark");
-  const { data: member } = useMember();
+  const { data: member, isLoading } = useMember();
   const toggleTheme = () => {
     const name = changeThemeByName(theme);
     if (member) lazyUpdateOrCreateTheme(member.id, name);
@@ -36,12 +36,16 @@ function App() {
   };
 
   useEffect(() => {
+    if (!isLoading && !member) {
+      setTheme("light");
+    }
+
     if (!member) return;
 
     (async () => {
       setTheme(await getTheme(member.id));
     })();
-  }, [member]);
+  }, [member, isLoading]);
 
   return (
     <HelmetProvider>

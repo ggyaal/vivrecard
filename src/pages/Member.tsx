@@ -201,7 +201,7 @@ const Member = () => {
                 배지
               </NavItem>
               {isSelf && <NavItem to={{ pathname: "connects" }}>연결</NavItem>}
-              <NavItem to={{ pathname: "reviews" }}>후기</NavItem>
+              <NavItem to={{ pathname: "contents" }}>활동</NavItem>
             </NavUl>
           </Nav>
           <Outlet context={{ member }} />

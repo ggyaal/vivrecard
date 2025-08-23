@@ -70,6 +70,7 @@ const CardReward = styled.div`
   font-weight: 500;
   padding: 4px 8px;
   border-radius: 6px;
+  border: 1px solid ${({ theme }) => theme.content.tag.orange.border};
   background: ${({ theme }) => theme.content.tag.orange.background};
   color: ${({ theme }) => theme.content.tag.orange.text};
 `;

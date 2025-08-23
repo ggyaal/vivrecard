@@ -19,6 +19,11 @@ const Container = styled.button<{
   justify-content: center;
   align-items: center;
   border-radius: 30px;
+  border: 1px solid
+    ${({ $isSelect, $color, $selectColor, theme }) =>
+      $isSelect
+        ? theme.content.tag[$selectColor].border
+        : theme.content.tag[$color].border};
   background-color: ${({ $isSelect, $color, $selectColor, theme }) =>
     $isSelect
       ? theme.content.tag[$selectColor].background

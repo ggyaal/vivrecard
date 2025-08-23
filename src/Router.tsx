@@ -6,7 +6,7 @@ import Login from "./pages/Login";
 import Member from "./pages/Member";
 import MemberBadges from "./pages/sub-pages/member/MemberBadges";
 import MemberConnects from "./pages/sub-pages/member/MemberConnects";
-import MemberReviews from "./pages/sub-pages/member/MemberReviews";
+import MemberContents from "./pages/sub-pages/member/MemberContents";
 import Books from "./pages/Books";
 import Movies from "./pages/Movies";
 import Movie from "./pages/Movie";
@@ -52,8 +52,8 @@ const router = createBrowserRouter([
             element: <MemberConnects />,
           },
           {
-            path: "reviews",
-            element: <MemberReviews />,
+            path: "contents",
+            element: <MemberContents />,
           },
         ],
       },

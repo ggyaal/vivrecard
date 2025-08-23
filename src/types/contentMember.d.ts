@@ -21,6 +21,8 @@ export interface ContentMemberSimpleResponse {
   recommended: number;
   recommendReason: string;
   star: number;
+  updatedAt: string;
+  createdAt: string;
 }
 
 export interface ContentMemberStarResponse {

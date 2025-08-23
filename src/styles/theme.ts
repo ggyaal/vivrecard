@@ -77,33 +77,50 @@ export const darkTheme: DefaultTheme = {
       text: "#FFF",
     },
     tag: {
+      default: {
+        border: "#b7b7b7",
+        background: "#1c1c1c",
+        text: "#bcbcbc",
+      },
       red: {
+        border: "#db6a6a",
         background: "#a82121",
         text: "#ffc0c0",
       },
       orange: {
+        border: "#bf9263",
         background: "#c26918",
         text: "#dbcbb1",
       },
       yellow: {
+        border: "#dbdf63",
         background: "#bcac33",
-        text: "#ffffc7",
+        text: "#fefe68",
       },
       green: {
+        border: "#7ec75f",
         background: "#338c37",
-        text: "#e4ffe5",
+        text: "#b3ffb6",
       },
       blue: {
+        border: "#7ab7d3",
         background: "#276eac",
-        text: "#092e55",
+        text: "#93bbe5",
       },
       sky: {
+        border: "#93d6dc",
         background: "#6a819a",
         text: "#b6cee4",
       },
       navy: {
-        background: "#0d164c",
-        text: "#d6dbfb",
+        border: "#414b71",
+        background: "#0a1036",
+        text: "#8086ad",
+      },
+      puple: {
+        border: "#8c65ac",
+        background: "#6d309f",
+        text: "#bd95df",
       },
     },
   },
@@ -257,33 +274,50 @@ export const lightTheme: DefaultTheme = {
       text: "#303030",
     },
     tag: {
+      default: {
+        border: "#1c1c1c",
+        background: "#f7f7f7",
+        text: "#424242",
+      },
       red: {
+        border: "#9b5e5e",
         background: "#f55353",
-        text: "#372121",
+        text: "#782727",
       },
       orange: {
+        border: "#ae8b63",
         background: "#ffa34e",
-        text: "#5f441a",
+        text: "#86683a",
       },
       yellow: {
+        border: "#b7b761",
         background: "#ffea47",
-        text: "#4a4a27",
+        text: "#7a7a41",
       },
       green: {
+        border: "#46b630",
         background: "#87f78b",
-        text: "#445e45",
+        text: "#579159",
       },
       blue: {
+        border: "#6076cf",
         background: "#6fb4ff",
         text: "#294a65",
       },
       sky: {
+        border: "#6699c5",
         background: "#b3dcff",
         text: "#295d95",
       },
       navy: {
-        background: "#1729a0",
-        text: "#dce1ff",
+        border: "#111850",
+        background: "#6a73ac",
+        text: "#080c24",
+      },
+      puple: {
+        border: "#6b4f83",
+        background: "#bd78ef",
+        text: "#4a305d",
       },
     },
   },
