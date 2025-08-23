@@ -181,3 +181,12 @@ declare module "styled-components" {
     };
   }
 }
+
+export type TagColor =
+  | "red"
+  | "orange"
+  | "yellow"
+  | "green"
+  | "blue"
+  | "sky"
+  | "navy";

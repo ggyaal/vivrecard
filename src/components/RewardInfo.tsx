@@ -6,6 +6,7 @@ import { labelForDomain } from "../types/DomainType";
 import { formatRelativeTime } from "../utils/timeUtils";
 import Avatar from "./profiles/Avatar";
 import { labelForReward } from "../types/rewardType";
+import { TagColor } from "../styles/styled";
 
 const Container = styled.div`
   display: grid;
@@ -37,9 +38,7 @@ const Chips = styled.div`
   gap: 8px;
 `;
 
-const Chip = styled.span<{
-  tone?: "red" | "orange" | "yellow" | "green" | "blue" | "sky" | "navy";
-}>`
+const Chip = styled.span<{ tone?: TagColor }>`
   ${({ tone = "sky", theme }) => {
     return css`
       background: ${theme.content.tag[tone].background};
