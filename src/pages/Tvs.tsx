@@ -4,7 +4,7 @@ import { discoverTvs, tvGenres, tvSearch } from "../api/tmdb/tmdb";
 import MainLoadingSpinner from "../components/MainLoadingSpinner";
 import ContentCard from "../components/ContentCard";
 import PageNav from "../components/PageNav";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import { parseSort } from "../utils/parseUtils";
 import SelectTag from "../components/SelectTag";
@@ -53,7 +53,6 @@ const Tvs = () => {
   const paramSort = parseSort(searchParams.get("sort"));
   const paramGenres = searchParams.get("genres");
   const selectGenres = paramGenres ? paramGenres.split(",") : [];
-  const navigate = useNavigate();
 
   const { data: genres, isLoading: genresLoading } = useQuery<GenreListProps>({
     queryKey: ["tv", "genres"],
@@ -72,14 +71,7 @@ const Tvs = () => {
         ? tvSearch(paramQuery, pageNumber)
         : discoverTvs(pageNumber, paramSort, selectGenres.join(",")),
     placeholderData: keepPreviousData,
-    meta: {
-      onerror: (error: unknown) => {
-        console.error("Error fetching TV shows:", error);
-        navigate("/error", {
-          state: { message: "TV shows를 불러오는 중 오류가 발생했습니다." },
-        });
-      },
-    },
+    retry: false,
   });
 
   if (isLoading) return <MainLoadingSpinner />;

@@ -121,6 +121,7 @@ const MovieCollection = () => {
       if (!id) throw new Error("Collection ID is not available");
       return movieCollection(id);
     },
+    retry: false,
   });
 
   const IMAGE_BASE = "https://image.tmdb.org/t/p/original";

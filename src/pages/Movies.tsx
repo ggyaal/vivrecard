@@ -71,7 +71,7 @@ const Movies = () => {
         ? movieSearch(paramQuery, pageNumber)
         : discoverMovies(pageNumber, paramSort, selectGenres.join(",")),
     placeholderData: keepPreviousData,
-    gcTime: 1000 * 60 * 3,
+    retry: false,
   });
 
   if (isLoading) return <MainLoadingSpinner />;

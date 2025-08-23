@@ -96,6 +96,7 @@ const MovieInfo = () => {
     queryFn: () =>
       platformId ? getContentId(platformId, `movie_${movie.id}`) : null,
     enabled: !!platformId,
+    retry: false,
   });
 
   const IMAGE_BASE = "https://image.tmdb.org/t/p/original";

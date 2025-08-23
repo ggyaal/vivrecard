@@ -76,6 +76,7 @@ const TvEpisode = () => {
     queryFn: () =>
       platformId ? getContentId(platformId, `episode_${episode!.id}`) : null,
     enabled: !!platformId,
+    retry: false,
   });
 
   if (!episode)

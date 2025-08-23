@@ -32,6 +32,7 @@ const Season = () => {
     queryFn: () =>
       platformId ? getContentId(platformId, `season_${season!.id}`) : null,
     enabled: !!tv && !!platformId && !!season,
+    retry: false,
   });
 
   if (isLoading) return <LoadingSpinner />;

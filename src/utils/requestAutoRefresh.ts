@@ -46,7 +46,11 @@ const requestAutoRefresh = async <T = any>({
     );
 
     if (!refreshRes.ok) {
-      throw new Error("토큰 갱신에 실패하였습니다. 다시 로그인해주세요.");
+      const e = new Error(
+        "토큰 갱신에 실패하였습니다. 다시 로그인해주세요."
+      ) as HttpError;
+      e.status = res.status;
+      throw e;
     }
 
     const {
@@ -56,6 +60,12 @@ const requestAutoRefresh = async <T = any>({
     if (newToken) localStorage.setItem("accessToken", newToken);
 
     res = await doFetch(newToken);
+  }
+
+  if (!res.ok) {
+    const e = new Error("서버에 문제가 발생하였습니다.") as HttpError;
+    e.status = res.status;
+    throw e;
   }
 
   return res.json();

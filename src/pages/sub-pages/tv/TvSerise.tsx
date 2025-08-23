@@ -89,12 +89,14 @@ const TvSerise = () => {
   const { data: platformId } = useQuery<string | null>({
     queryKey: ["platformId", "TMDB"],
     queryFn: () => getPlatformId("TMDB"),
+    retry: false,
   });
   const { data: contentId, refetch } = useQuery<string | null>({
     queryKey: ["contentId", "TMDB", tv?.id],
     queryFn: () =>
       platformId ? getContentId(platformId, `tv_${tv!.id}`) : null,
     enabled: !!tv && !!platformId,
+    retry: false,
   });
 
   const IMAGE_BASE = "https://image.tmdb.org/t/p/original";

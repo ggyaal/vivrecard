@@ -40,7 +40,7 @@ const Login = () => {
 
   useEffect(() => {
     if (!isLoading && member) {
-      navigate("/members/me", { replace: true });
+      navigate(-1);
     }
   }, [isLoading, member, navigate]);
 
