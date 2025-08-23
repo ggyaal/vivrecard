@@ -155,13 +155,13 @@ const ReviewSection = ({ id, idRefetch, saveContent }: ReviewSectionProps) => {
   } = useQuery<PageResponse<ReviewDetailResponse>>({
     queryKey: ["reviews", id, reviewPageNumber],
     queryFn: () => getReviews({ contentId: id!, page: reviewPageNumber }),
-    enabled: !!id,
+    enabled: !!id && !!member,
     placeholderData: keepPreviousData,
   });
   const { data: reviewStars } = useQuery<ContentMemberStarResponse | null>({
     queryKey: ["review", "stars", id],
     queryFn: () => getReviewStars(id!),
-    enabled: !!id && !!reviews,
+    enabled: !!id && !!reviews && !!member,
   });
 
   const prevUpdatedAt = useRef(dataUpdatedAt);
