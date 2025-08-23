@@ -4,9 +4,13 @@ import { getRewards } from "../api/backend/getReward";
 import MainLoadingSpinner from "../components/MainLoadingSpinner";
 import { Helmet } from "react-helmet-async";
 import BasicModal from "../components/BasicModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RewardInfo from "../components/RewardInfo";
 import { RewardType } from "../types/rewardType";
+import { useNavigate } from "react-router-dom";
+import { PageResponse } from "../types/api";
+import { RewardSimpleResponse } from "../types/reward";
+import { HttpError } from "../types/HttpError";
 
 const Container = styled.main`
   display: flex;
@@ -81,10 +85,23 @@ const Exp = styled.span`
 
 const Rewards = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const { data: rewards, isLoading } = useQuery({
+  const navigate = useNavigate();
+  const {
+    data: rewards,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<PageResponse<RewardSimpleResponse> | null, HttpError>({
     queryKey: ["rewards"],
     queryFn: () => getRewards(),
+    retry: false,
   });
+
+  useEffect(() => {
+    if (isError && error.status === 401) {
+      navigate("/login");
+    }
+  }, [isError, error, navigate]);
 
   if (isLoading) return <MainLoadingSpinner />;
 

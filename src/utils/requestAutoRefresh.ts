@@ -1,4 +1,5 @@
 import { APIResponse } from "../types/api";
+import { HttpError } from "../types/HttpError";
 
 const requestAutoRefresh = async <T = any>({
   path,
@@ -28,7 +29,9 @@ const requestAutoRefresh = async <T = any>({
 
   let accessToken: string | null = localStorage.getItem("accessToken");
   if (requiredLogin && !accessToken) {
-    throw new Error("로그인이 필요한 요청입니다.");
+    const e = new Error("로그인이 필요한 요청입니다.") as HttpError;
+    e.status = 401;
+    throw e;
   }
 
   let res = await doFetch(accessToken);

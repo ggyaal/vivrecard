@@ -5,6 +5,7 @@ import requestAutoRefresh from "../../utils/requestAutoRefresh";
 export const getRewards = async () => {
   const res = await requestAutoRefresh<PageResponse<RewardSimpleResponse>>({
     path: "/api/v1/rewards",
+    requiredLogin: true,
   });
 
   if (!res.isSuccess) {
@@ -17,6 +18,7 @@ export const getRewards = async () => {
 export const getReward = async (id: string) => {
   const res = await requestAutoRefresh<RewardDetailResponse>({
     path: `/api/v1/rewards/${id}`,
+    requiredLogin: true,
   });
 
   if (!res.isSuccess) {
