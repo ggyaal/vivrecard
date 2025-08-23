@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
-import { darkTheme, lightTheme } from "./styles/theme";
 import { GlobalStyles } from "./styles/styles";
 import { Outlet } from "react-router-dom";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import { HelmetProvider } from "react-helmet-async";
+import useMember from "./hooks/useMember";
+import {
+  changeThemeByName,
+  getTheme,
+  getThemeByName,
+  lazyUpdateOrCreateTheme,
+} from "./api/backend/theme";
 
 const Layout = styled.div`
   position: relative;
@@ -21,12 +27,25 @@ const Main = styled.div`
 `;
 
 function App() {
-  const [isDark, setIsDark] = useState<boolean>(false);
-  const toggleTheme = () => setIsDark(!isDark);
+  const [theme, setTheme] = useState<string>("dark");
+  const { data: member } = useMember();
+  const toggleTheme = () => {
+    const name = changeThemeByName(theme);
+    if (member) lazyUpdateOrCreateTheme(member.id, name);
+    setTheme(name);
+  };
+
+  useEffect(() => {
+    if (!member) return;
+
+    (async () => {
+      setTheme(await getTheme(member.id));
+    })();
+  }, [member]);
 
   return (
     <HelmetProvider>
-      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+      <ThemeProvider theme={getThemeByName(theme)}>
         <GlobalStyles />
         <Layout>
           <SidebarBrace></SidebarBrace>
@@ -35,7 +54,7 @@ function App() {
             <Outlet />
           </Main>
         </Layout>
-        <Sidebar isDark={isDark} toggleTheme={toggleTheme} />
+        <Sidebar theme={theme} toggleTheme={toggleTheme} />
       </ThemeProvider>
     </HelmetProvider>
   );

@@ -1,25 +1,20 @@
 import {
   HiHome,
   HiOutlineHome,
-  HiSun,
   HiBookOpen,
   HiOutlineBookOpen,
 } from "react-icons/hi";
-import { HiMoon } from "react-icons/hi2";
 import { BsCameraReels, BsCameraReelsFill } from "react-icons/bs";
 import { TbDeviceTvOld, TbDeviceTvOldFilled } from "react-icons/tb";
 import { PiMedal, PiMedalFill } from "react-icons/pi";
 import styled from "styled-components";
 import IconButton from "./buttons/IconButton";
 import { Link, useLocation } from "react-router-dom";
+import { getThemeIconByName } from "../api/backend/theme";
 
 interface SidebarProps {
-  isDark: boolean;
+  theme: string;
   toggleTheme: () => void;
-}
-
-interface MenuItemProps {
-  under?: boolean;
 }
 
 const Container = styled.div`
@@ -35,13 +30,11 @@ const Container = styled.div`
   z-index: 1010;
 `;
 
-const MenuItem = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "under",
-})<MenuItemProps>`
+const MenuItem = styled.div<{ $under?: boolean }>`
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: ${({ under }) => (under ? "auto" : undefined)};
+  margin-top: ${({ $under }) => ($under ? "auto" : undefined)};
   align-items: center;
   padding: 30px 10px;
   color: ${({ theme }) => theme.colors.text};
@@ -49,9 +42,9 @@ const MenuItem = styled.div.withConfig({
   transition: color 0.3s ease;
 `;
 
-const Sidebar = ({ isDark, toggleTheme }: SidebarProps) => {
+const Sidebar = ({ theme, toggleTheme }: SidebarProps) => {
   const location = useLocation();
-  const ThemeIcon = isDark ? HiMoon : HiSun;
+  const ThemeIcon = getThemeIconByName(theme);
 
   return (
     <Container>
@@ -116,7 +109,7 @@ const Sidebar = ({ isDark, toggleTheme }: SidebarProps) => {
           />
         </Link>
       </MenuItem>
-      <MenuItem onClick={toggleTheme} under>
+      <MenuItem onClick={toggleTheme} $under>
         <ThemeIcon size={28} />
       </MenuItem>
     </Container>

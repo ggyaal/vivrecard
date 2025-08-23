@@ -17,7 +17,6 @@ const useMember = ({ id }: { id?: string } = {}) => {
     queryKey: [id ? "member_" + id : "me"],
     queryFn: () => fetchMember(id),
     retry: false,
-    staleTime: 10 * 60 * 1000,
   });
 };
 
