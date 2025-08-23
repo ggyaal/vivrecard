@@ -109,7 +109,7 @@ const Rewards = () => {
     return (
       <>
         <Helmet>
-          <title>Rewards</title>
+          <title>도전과제</title>
           <meta name="description" content="Rewards page of Vivre Card" />
         </Helmet>
         <Container>
@@ -123,7 +123,7 @@ const Rewards = () => {
   return (
     <>
       <Helmet>
-        <title>Rewards</title>
+        <title>도전과제</title>
         <meta name="description" content="Rewards page of Vivre Card" />
       </Helmet>
       <Container>

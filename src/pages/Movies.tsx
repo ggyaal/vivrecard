@@ -2,7 +2,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
 import { movieSearch, discoverMovies, movieGenres } from "../api/tmdb/tmdb";
-import LoadingSpinner from "../components/LoadingSpinner";
+import MainLoadingSpinner from "../components/MainLoadingSpinner";
 import ContentCard from "../components/ContentCard";
 import PageNav from "../components/PageNav";
 import { useSearchParams } from "react-router-dom";
@@ -74,7 +74,7 @@ const Movies = () => {
     gcTime: 1000 * 60 * 3,
   });
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading) return <MainLoadingSpinner />;
 
   if (!movies)
     return (
