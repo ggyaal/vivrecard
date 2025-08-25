@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import FadeInImageCard from "../../../components/FadeInImageCard";
 import { SeasonDetailProps } from "../../../types/tv";
 import ReviewSection from "../../../components/ReviewSection";
+import { ContentType } from "../../../types/contentType";
 
 const Container = styled.div`
   display: flex;
@@ -174,6 +175,8 @@ const TvSeason = () => {
       {saveSeason && (
         <ReviewSection
           id={seasonId}
+          contentType={ContentType.SEASON}
+          maxAmount={season.episodes.length}
           idRefetch={idRefetch}
           saveContent={saveSeason}
         />

@@ -2,31 +2,64 @@ import { ContentType } from "../types/contentType";
 import { formatHourMinutes } from "./timeUtils";
 
 export const formatAmountByContentType = (
-  amount: number,
+  amount: number | null,
+  totalAmount: number,
   type: ContentType,
   showTail: boolean = false
 ) => {
+  const isZero = !amount || amount === 0;
+  const isCompleted = !isZero && amount === totalAmount;
+
   switch (type) {
     case "BOOK":
-      return `${amount ? amount : 0} 페이지 ${showTail ? "까지 읽음" : ""}`;
+      if (isZero) return "아직 읽기 전";
+      if (isCompleted) return "읽기 완료";
+      return `${amount} 페이지 ${showTail ? "까지 읽음" : ""}`;
+
     case "SERIES":
-      return `${amount ? amount : 0} 시즌 ${showTail ? "까지 시청" : ""}`;
+      if (isZero) return "아직 시청 전";
+      if (isCompleted) return "시청 완료";
+      return `${amount} 시즌 ${showTail ? "까지 시청" : ""}`;
+
     case "SEASON":
-      return `${amount ? amount : 0} 에피소드 ${showTail ? "까지 시청" : ""}`;
+      if (isZero) return "아직 시청 전";
+      if (isCompleted) return "시청 완료";
+      return `${amount} 에피소드 ${showTail ? "까지 시청" : ""}`;
+
     case "GAME":
-      return `${amount ? formatHourMinutes(amount) : "0 분"} ${
-        showTail ? "까지 플레이" : ""
-      }`;
+      if (isZero) return "아직 플레이 전";
+      if (isCompleted) return "플레이 완료";
+      return `${formatHourMinutes(amount!)} ${showTail ? "까지 플레이" : ""}`;
+
     case "MUSIC":
-      return `${amount ? formatHourMinutes(amount) : "0 분"} ${
-        showTail ? "까지 청취" : ""
-      }`;
+      if (isZero) return "아직 청취 전";
+      if (isCompleted) return "청취 완료";
+      return `${formatHourMinutes(amount!)} ${showTail ? "까지 청취" : ""}`;
+
     case "MOVIE":
     case "EPISODE":
-      return `${amount ? formatHourMinutes(amount) : "0 분"} ${
-        showTail ? "까지 시청" : ""
-      }`;
+      if (isZero) return "아직 시청 전";
+      if (isCompleted) return "시청 완료";
+      return `${formatHourMinutes(amount!)} ${showTail ? "까지 시청" : ""}`;
   }
 
-  return `${amount ? amount : 0} 개`;
+  return isZero ? "아직 이용 전" : `${amount} 개`;
+};
+
+export const formatAmount = (amount: number, type: ContentType) => {
+  switch (type) {
+    case "BOOK":
+      return `${amount} 페이지`;
+    case "SERIES":
+      return `${amount} 시즌`;
+    case "SEASON":
+      return `${amount} 에피소드`;
+    case "GAME":
+    case "MUSIC":
+    case "MOVIE":
+    case "EPISODE":
+      return `${formatHourMinutes(amount!)}`;
+  }
+
+  return `${amount} 개`;
 };

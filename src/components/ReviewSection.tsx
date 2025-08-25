@@ -17,9 +17,14 @@ import { ContentMemberStarResponse } from "../types/contentMember";
 import { formatRelativeTime } from "../utils/timeUtils";
 import { Link, useSearchParams } from "react-router-dom";
 import PageNav from "./PageNav";
+import { ContentType } from "../types/contentType";
+import { formatAmount, formatAmountByContentType } from "../utils/contentUtils";
+import AmountTag from "./AmountTag";
 
 interface ReviewSectionProps {
   id?: string | null;
+  contentType: ContentType;
+  maxAmount: number;
   idRefetch: () => void;
   saveContent: () => Promise<string>;
 }
@@ -43,20 +48,12 @@ const WriterContainer = styled.div`
 `;
 
 const AvatarWrapper = styled.div`
-  margin-top: 45px;
+  margin-top: 60px;
 `;
 
 const ButtonWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-`;
-
-const WriterWrapper = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   gap: 10px;
 `;
 
@@ -64,10 +61,86 @@ const SubmitButton = styled.button`
   padding: 10px 20px;
   border: 1px solid ${({ theme }) => theme.colors.paleText};
   border-radius: 5px;
+  margin-left: auto;
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.primary};
   }
+`;
+
+const WriterWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+`;
+
+const AmountContainer = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const AmountInput = styled.input`
+  width: 300px;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 2px;
+  --val: 0%;
+
+  &::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(
+          to right,
+          ${({ theme }) => theme.content.tag.green.background},
+          ${({ theme }) => theme.content.tag.blue.background}
+        )
+        0 / var(--val) 100% no-repeat,
+      ${({ theme }) => theme.content.subtext};
+  }
+
+  &::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(
+          to right,
+          ${({ theme }) => theme.content.tag.green.background},
+          ${({ theme }) => theme.content.tag.blue.background}
+        )
+        0 / var(--val) 100% no-repeat,
+      ${({ theme }) => theme.content.subtext};
+  }
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: ${({ theme }) => theme.content.tag.blue.background};
+    cursor: pointer;
+    margin-top: -8px;
+  }
+
+  &::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: ${({ theme }) => theme.content.tag.blue.background};
+    cursor: pointer;
+  }
+`;
+
+const AmountInfo = styled.div`
+  position: absolute;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  gap: 5px;
+  color: ${({ theme }) => theme.content.subtext};
+  bottom: -25px;
 `;
 
 const Input = styled.textarea`
@@ -138,7 +211,13 @@ const ReviewDate = styled.div`
   color: ${({ theme }) => theme.colors.paleText};
 `;
 
-const ReviewSection = ({ id, idRefetch, saveContent }: ReviewSectionProps) => {
+const ReviewSection = ({
+  id,
+  contentType,
+  maxAmount,
+  idRefetch,
+  saveContent,
+}: ReviewSectionProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const reviewPage = searchParams.get("reviewPage");
   const reviewPageNumber = Number(reviewPage) > 0 ? Number(reviewPage) - 1 : 0;
@@ -146,6 +225,7 @@ const ReviewSection = ({ id, idRefetch, saveContent }: ReviewSectionProps) => {
   const { data: member, isLoading } = useMember();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [star, setStar] = useState<number>(0);
+  const [amount, setAmount] = useState<number>(0);
   const [message, setMessage] = useState<string>("");
   const {
     data: reviews,
@@ -192,9 +272,29 @@ const ReviewSection = ({ id, idRefetch, saveContent }: ReviewSectionProps) => {
             </AvatarWrapper>
             <WriterWrapper>
               <ButtonWrapper>
+                <AmountContainer>
+                  <AmountInput
+                    type="range"
+                    min="0"
+                    max={maxAmount}
+                    onChange={(e) => {
+                      const value = Number(e.target.value);
+                      setAmount(value);
+                      e.target.style.setProperty(
+                        "--val",
+                        `${(value / maxAmount) * 100}%`
+                      );
+                    }}
+                    value={amount}
+                  />
+                  <AmountInfo>
+                    {formatAmountByContentType(amount, maxAmount, contentType)}{" "}
+                    / {formatAmount(maxAmount, contentType)}
+                  </AmountInfo>
+                </AmountContainer>
                 <StarSelector
                   count={10}
-                  size={35}
+                  size={25}
                   value={star}
                   setValue={setStar}
                 />
@@ -207,6 +307,7 @@ const ReviewSection = ({ id, idRefetch, saveContent }: ReviewSectionProps) => {
                     const review = await createReview(contentId, {
                       message,
                       star,
+                      consumedAmount: amount,
                     });
 
                     if (review) {
@@ -269,6 +370,11 @@ const ReviewSection = ({ id, idRefetch, saveContent }: ReviewSectionProps) => {
                       size={18}
                       showScore={true}
                       fontSize={12}
+                    />
+                    <AmountTag
+                      amount={review.consumedAmount}
+                      totalAmount={maxAmount}
+                      type={contentType}
                     />
                     <ReviewDate>
                       {formatRelativeTime(new Date(review.createdAt))}

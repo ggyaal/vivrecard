@@ -11,7 +11,7 @@ interface StarSelectorProps {
 const Container = styled.div`
   color: ${({ theme }) => theme.colors.paleText};
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 5px;
 `;
 

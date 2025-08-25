@@ -10,6 +10,7 @@ import { getPlatformId } from "../../../api/backend/getPlatform";
 import { getContentId } from "../../../api/backend/getContent";
 import { createContentSeries } from "../../../api/backend/createContent";
 import { useQuery } from "@tanstack/react-query";
+import { ContentType } from "../../../types/contentType";
 
 const Container = styled.div`
   display: flex;
@@ -140,6 +141,8 @@ const TvSerise = () => {
       </Container>
       <ReviewSection
         id={contentId}
+        contentType={ContentType.SERIES}
+        maxAmount={tv.number_of_seasons}
         idRefetch={refetch}
         saveContent={async () => {
           const content = await createContentSeries(platformId!, tv);

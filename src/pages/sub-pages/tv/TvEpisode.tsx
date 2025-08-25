@@ -9,6 +9,7 @@ import { getContentId } from "../../../api/backend/getContent";
 import { useQuery } from "@tanstack/react-query";
 import { createContentEpisode } from "../../../api/backend/createContent";
 import { GenreProps } from "../../../types/tmdb";
+import { ContentType } from "../../../types/contentType";
 
 const Container = styled.div``;
 
@@ -112,6 +113,8 @@ const TvEpisode = () => {
       {saveSeason && (
         <ReviewSection
           id={episodeId}
+          contentType={ContentType.EPISODE}
+          maxAmount={episode.runtime}
           idRefetch={refetch}
           saveContent={async () => {
             const parentId = seasonId ? seasonId : await saveSeason();

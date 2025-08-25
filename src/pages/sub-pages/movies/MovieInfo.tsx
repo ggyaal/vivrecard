@@ -10,6 +10,7 @@ import { getPlatformId } from "../../../api/backend/getPlatform";
 import { getContentId } from "../../../api/backend/getContent";
 import ReviewSection from "../../../components/ReviewSection";
 import { createContentMovie } from "../../../api/backend/createContent";
+import { ContentType } from "../../../types/contentType";
 
 const Container = styled.div`
   display: flex;
@@ -143,6 +144,8 @@ const MovieInfo = () => {
       </Container>
       <ReviewSection
         id={contentId}
+        contentType={ContentType.MOVIE}
+        maxAmount={movie.runtime}
         idRefetch={refetch}
         saveContent={async () => {
           const content = await createContentMovie(platformId!, movie);

@@ -19,11 +19,11 @@ import {
   LevelBucket,
   toLevelBucket,
 } from "../utils/memberUtils";
-import { formatAmountByContentType } from "../utils/contentUtils";
 import { PageResponse } from "../types/api";
 import { ReviewDetailResponse } from "../types/review";
 import { getReviews } from "../api/backend/getReview";
 import { useEffect, useRef } from "react";
+import AmountTag from "./AmountTag";
 
 const Container = styled.div``;
 
@@ -234,15 +234,6 @@ const ReviewFooter = styled.div`
   flex-wrap: wrap;
 `;
 
-const ReviewChip = styled.span`
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 999px;
-  border: 1px solid ${({ theme }) => theme.content.tag.default.border};
-  background-color: ${({ theme }) => theme.content.tag.default.background};
-  color: ${({ theme }) => theme.content.tag.default.text};
-`;
-
 const Footer = styled.footer`
   padding: 12px 20px;
   display: flex;
@@ -426,13 +417,11 @@ const ContentMember = ({
                         showScore={true}
                         aria-label={`별점 ${r.star}점`}
                       />
-                      <ReviewChip>
-                        {formatAmountByContentType(
-                          r.consumedAmount,
-                          content.contentType,
-                          true
-                        )}
-                      </ReviewChip>
+                      <AmountTag
+                        amount={r.consumedAmount}
+                        totalAmount={content.totalAmount}
+                        type={content.contentType}
+                      />
                     </ReviewHeader>
                     <ReviewMessage>{r.message}</ReviewMessage>
                     <ReviewFooter>
