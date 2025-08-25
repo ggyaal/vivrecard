@@ -6,6 +6,7 @@ import {
 } from "react-icons/hi";
 import { BsCameraReels, BsCameraReelsFill } from "react-icons/bs";
 import { TbDeviceTvOld, TbDeviceTvOldFilled } from "react-icons/tb";
+import { BiPlanet, BiSolidPlanet } from "react-icons/bi";
 import { PiMedal, PiMedalFill } from "react-icons/pi";
 import styled from "styled-components";
 import IconButton from "./buttons/IconButton";
@@ -66,7 +67,7 @@ const Sidebar = ({ theme, toggleTheme }: SidebarProps) => {
             icon={HiOutlineBookOpen}
             hoverIcon={HiBookOpen}
             size={30}
-            ariaLabel="Home"
+            ariaLabel="Book"
             onClick={() => alert("아직 ...")}
             selected={location.pathname.startsWith("#")}
             disabled={location.pathname === "#"}
@@ -79,7 +80,7 @@ const Sidebar = ({ theme, toggleTheme }: SidebarProps) => {
             icon={BsCameraReels}
             hoverIcon={BsCameraReelsFill}
             size={28}
-            ariaLabel="Home"
+            ariaLabel="Movie"
             selected={location.pathname.startsWith("/movies")}
             disabled={location.pathname === "/movies"}
           />
@@ -91,9 +92,21 @@ const Sidebar = ({ theme, toggleTheme }: SidebarProps) => {
             icon={TbDeviceTvOld}
             hoverIcon={TbDeviceTvOldFilled}
             size={30}
-            ariaLabel="Home"
+            ariaLabel="TV"
             selected={location.pathname.startsWith("/tvs")}
             disabled={location.pathname === "/tvs"}
+          />
+        </Link>
+      </MenuItem>
+      <MenuItem>
+        <Link to="/contents">
+          <IconButton
+            icon={BiPlanet}
+            hoverIcon={BiSolidPlanet}
+            size={30}
+            ariaLabel="Content"
+            selected={location.pathname.startsWith("/contents")}
+            disabled={location.pathname === "/contents"}
           />
         </Link>
       </MenuItem>
@@ -103,7 +116,7 @@ const Sidebar = ({ theme, toggleTheme }: SidebarProps) => {
             icon={PiMedal}
             hoverIcon={PiMedalFill}
             size={30}
-            ariaLabel="Home"
+            ariaLabel="Reward"
             selected={location.pathname.startsWith("/rewards")}
             disabled={location.pathname === "/rewards"}
           />

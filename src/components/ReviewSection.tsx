@@ -4,7 +4,10 @@ import useMember from "../hooks/useMember";
 import Avatar from "./profiles/Avatar";
 import StarSelector from "./StarSelector";
 import { useEffect, useRef, useState } from "react";
-import { getReviews, getReviewStars } from "../api/backend/getReview";
+import {
+  getReviewsByContentId,
+  getReviewStars,
+} from "../api/backend/getReview";
 import { PageResponse } from "../types/api";
 import { ReviewDetailResponse } from "../types/review";
 import createReview from "../api/backend/createReview";
@@ -15,7 +18,7 @@ import {
 } from "@tanstack/react-query";
 import { ContentMemberStarResponse } from "../types/contentMember";
 import { formatRelativeTime } from "../utils/timeUtils";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import PageNav from "./PageNav";
 import { ContentType } from "../types/contentType";
 import { formatAmount, formatAmountByContentType } from "../utils/contentUtils";
@@ -185,18 +188,12 @@ const ReviewWrapper = styled.div`
   gap: 10px;
 `;
 
-const ReviewProfile = styled(Link)`
+const ReviewProfile = styled.div`
   padding: 10px;
   display: flex;
   align-items: center;
   gap: 10px;
   border-radius: 5px;
-  transition: all 0.1s ease;
-
-  &:hover {
-    box-shadow: 5px 0 15px -5px ${({ theme }) => theme.colors.primary};
-    transform: translateX(-5px);
-  }
 `;
 
 const ReviewComment = styled.div`
@@ -234,7 +231,8 @@ const ReviewSection = ({
     dataUpdatedAt,
   } = useQuery<PageResponse<ReviewDetailResponse>>({
     queryKey: ["reviews", id, reviewPageNumber],
-    queryFn: () => getReviews({ contentId: id!, page: reviewPageNumber }),
+    queryFn: () =>
+      getReviewsByContentId({ contentId: id!, page: reviewPageNumber }),
     enabled: !!id && !!member,
     placeholderData: keepPreviousData,
   });
@@ -312,6 +310,7 @@ const ReviewSection = ({
 
                     if (review) {
                       setMessage("");
+                      setAmount(0);
                       setStar(0);
                       refetch();
                     }
@@ -361,8 +360,12 @@ const ReviewSection = ({
               reviews.content.map((review) => (
                 <ReviewContainer key={review.id}>
                   <ReviewWrapper>
-                    <ReviewProfile to={`/members/${review.info.member.id}`}>
-                      <Avatar url={review.info.member.avatarUrl} size={35} />
+                    <ReviewProfile>
+                      <Avatar
+                        to={`/members/${review.info.member.id}`}
+                        url={review.info.member.avatarUrl}
+                        size={35}
+                      />
                       <div>{review.info.member.nickname}</div>
                     </ReviewProfile>
                     <Stars

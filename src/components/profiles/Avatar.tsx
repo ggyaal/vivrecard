@@ -1,13 +1,24 @@
-import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import styled, { css } from "styled-components";
 
-const Container = styled.div.withConfig({
-  shouldForwardProp: (prop) => !["size"].includes(prop),
-})<{ size: number }>`
-  width: ${({ size }) => size}px;
-  height: ${({ size }) => size}px;
+const Container = styled.div<{ $size: number; $active: boolean }>`
+  width: ${({ $size }) => $size}px;
+  height: ${({ $size }) => $size}px;
   border: 1px solid ${({ theme }) => theme.colors.primary};
   border-radius: 50%;
   padding: 5px;
+  ${({ $active }) => {
+    if (!$active) return "";
+    return css`
+      cursor: pointer;
+      transition: all 0.1s ease-in-out;
+
+      &:hover {
+        padding: 3px;
+        border: 1px solid ${({ theme }) => theme.colors.secondary};
+      }
+    `;
+  }}
 `;
 
 const Image = styled.img`
@@ -16,9 +27,23 @@ const Image = styled.img`
   border-radius: 50%;
 `;
 
-const Avatar = ({ url, size = 50 }: { url: string; size?: number }) => {
+const Avatar = ({
+  to,
+  url,
+  size = 50,
+}: {
+  to?: string;
+  url: string;
+  size?: number;
+}) => {
+  const navigate = useNavigate();
+
   return (
-    <Container size={size}>
+    <Container
+      onClick={() => to && navigate(to)}
+      $active={to !== undefined}
+      $size={size}
+    >
       <Image src={url} alt="Avatar" />
     </Container>
   );

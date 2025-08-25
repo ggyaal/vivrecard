@@ -1,4 +1,5 @@
-import { ContentType } from "../types/contentType";
+import { ContentSimpleResponse } from "../types/content";
+import { ContentType, ContentTypeLabel } from "../types/contentType";
 import { formatHourMinutes } from "./timeUtils";
 
 export const formatAmountByContentType = (
@@ -62,4 +63,13 @@ export const formatAmount = (amount: number, type: ContentType) => {
   }
 
   return `${amount} 개`;
+};
+
+export const formatContentSeriseLabel = (
+  content: ContentSimpleResponse
+): string => {
+  if (!content.childrenIdx) return "";
+  return `${content.series ? formatContentSeriseLabel(content.series) : ""} ${
+    ContentTypeLabel[content.contentType]
+  } ${content.childrenIdx}`;
 };

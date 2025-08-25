@@ -6,22 +6,72 @@ import requestAutoRefresh from "../../utils/requestAutoRefresh";
 export const getReviews = async ({
   contentId,
   memberId,
+  includeChildren = false,
   page,
   size = 5,
   signal,
 }: {
-  contentId?: string;
-  memberId?: string;
+  contentId: string;
+  memberId: string;
+  includeChildren?: boolean;
   page?: number;
   size?: number;
   signal?: AbortSignal;
 }): Promise<PageResponse<ReviewDetailResponse>> => {
   const res = await requestAutoRefresh<PageResponse<ReviewDetailResponse>>({
-    path: `/api/v1/reviews?sort=createdAt,desc&${
-      contentId ? `contentId=${contentId}&` : ""
-    }${memberId ? `memberId=${memberId}&` : ""}${page ? `page=${page}&` : ""}${
-      size ? `size=${size}` : ""
-    }`,
+    path: `/api/v1/contents/${contentId}/members/${memberId}/reviews?sort=created_at,desc&includeChildren=${includeChildren}&${
+      page ? `page=${page}&` : ""
+    }${size ? `size=${size}` : ""}`,
+    signal,
+  });
+
+  if (!res.isSuccess) {
+    return {} as PageResponse<ReviewDetailResponse>;
+  }
+
+  return res.data;
+};
+
+export const getReviewsByContentId = async ({
+  contentId,
+  page,
+  size = 5,
+  signal,
+}: {
+  contentId?: string;
+  page?: number;
+  size?: number;
+  signal?: AbortSignal;
+}) => {
+  const res = await requestAutoRefresh<PageResponse<ReviewDetailResponse>>({
+    path: `/api/v1/contents/${contentId}/reviews?sort=createdAt,desc&${
+      page ? `page=${page}` : ""
+    }${size ? `size=${size}&` : ""}`,
+    signal,
+  });
+
+  if (!res.isSuccess) {
+    return {} as PageResponse<ReviewDetailResponse>;
+  }
+
+  return res.data;
+};
+
+export const getReviewsByMemberId = async ({
+  memberId,
+  page,
+  size = 5,
+  signal,
+}: {
+  memberId?: string;
+  page?: number;
+  size?: number;
+  signal?: AbortSignal;
+}) => {
+  const res = await requestAutoRefresh<PageResponse<ReviewDetailResponse>>({
+    path: `/api/v1/members/${memberId}/reviews?sort=createdAt,desc&${
+      page ? `page=${page}` : ""
+    }${size ? `size=${size}&` : ""}`,
     signal,
   });
 

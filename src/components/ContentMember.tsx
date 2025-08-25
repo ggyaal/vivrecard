@@ -24,6 +24,8 @@ import { ReviewDetailResponse } from "../types/review";
 import { getReviews } from "../api/backend/getReview";
 import { useEffect, useRef } from "react";
 import AmountTag from "./AmountTag";
+import { formatContentSeriseLabel } from "../utils/contentUtils";
+import { ContentType } from "../types/contentType";
 
 const Container = styled.div``;
 
@@ -112,9 +114,15 @@ const Section = styled.section`
 `;
 
 const SectionTitle = styled.h3`
-  margin: 0 0 12px;
-  font-size: 16px;
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: 600;
   color: ${({ theme }) => theme.card.basic.text};
+
+  span {
+    margin-left: 10px;
+    font-size: 16px;
+  }
 `;
 
 const MemberCard = styled.div`
@@ -218,6 +226,27 @@ const ReviewHeader = styled.div`
   flex-wrap: wrap;
 `;
 
+const ReviewContent = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+`;
+
+const ReviewContentTitle = styled.div`
+  color: ${({ theme }) => theme.content.text};
+  font-size: 14px;
+`;
+
+const ReviewContentLabel = styled.div`
+  border: 1px solid ${({ theme }) => theme.card.info.border};
+  background-color: ${({ theme }) => theme.card.info.background};
+  color: ${({ theme }) => theme.card.info.text};
+  border-radius: 5px;
+  padding: 2px 5px;
+  font-size: 12px;
+`;
+
 const ReviewMeta = styled.span`
   font-size: 12px;
   color: ${({ theme }) => theme.card.basic.paleText};
@@ -277,6 +306,7 @@ const ContentMember = ({
       getReviews({
         contentId,
         memberId,
+        includeChildren: true,
         page: pageParam as number,
         signal,
       }),
@@ -285,6 +315,7 @@ const ContentMember = ({
 
       return currPage.page + 1;
     },
+    retry: false,
   });
 
   const loadMordRef = useRef<HTMLDivElement | null>(null);
@@ -343,9 +374,10 @@ const ContentMember = ({
             <Divider />
             <MetaItem>
               <MetaLabel>완료율</MetaLabel>
-              <MetaValue>{`${
-                completedRate ? completedRate.completedRate : 0
-              } %`}</MetaValue>
+              <MetaValue>{`${(
+                contentMember.completedCount * 100 +
+                (completedRate ? completedRate.completedRate : 0)
+              ).toFixed(2)} %`}</MetaValue>
             </MetaItem>
             <Divider />
             <MetaItem>
@@ -366,7 +398,11 @@ const ContentMember = ({
             </MetaItem>
           </MetaRow>
           <MemberCard>
-            <Avatar url={member.avatarUrl} size={55} />
+            <Avatar
+              to={`/members/${member.id}`}
+              url={member.avatarUrl}
+              size={55}
+            />
             <MemberInfo>
               <MemberName>{member.nickname}</MemberName>
               <LevelRow>
@@ -399,7 +435,10 @@ const ContentMember = ({
       )}
 
       <Section>
-        <SectionTitle>리뷰 💬</SectionTitle>
+        <SectionTitle>
+          리뷰 💬
+          <span>{infiniteReviews?.pages[0].totalElements} 개</span>
+        </SectionTitle>
         {reviewLoading ? (
           <LoadingSpinner />
         ) : reviews ? (
@@ -419,9 +458,21 @@ const ContentMember = ({
                       />
                       <AmountTag
                         amount={r.consumedAmount}
-                        totalAmount={content.totalAmount}
-                        type={content.contentType}
+                        totalAmount={r.info.content.totalAmount}
+                        type={r.info.content.contentType}
                       />
+                      {![ContentType.SERIES, ContentType.MOVIE].includes(
+                        r.info.content.contentType
+                      ) && (
+                        <ReviewContent>
+                          <ReviewContentTitle>
+                            {r.info.content.title}
+                          </ReviewContentTitle>
+                          <ReviewContentLabel>
+                            {formatContentSeriseLabel(r.info.content)}
+                          </ReviewContentLabel>
+                        </ReviewContent>
+                      )}
                     </ReviewHeader>
                     <ReviewMessage>{r.message}</ReviewMessage>
                     <ReviewFooter>

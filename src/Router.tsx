@@ -25,6 +25,7 @@ import MovieCollection from "./pages/sub-pages/movies/MovieCollection";
 import Collection from "./pages/Collection";
 import Rewards from "./pages/Rewards";
 import ErrorPage from "./pages/ErrorPage";
+import Contents from "./pages/Contents";
 
 const router = createBrowserRouter([
   {
@@ -140,6 +141,10 @@ const router = createBrowserRouter([
       {
         path: "rewards",
         element: <Rewards />,
+      },
+      {
+        path: "contents",
+        element: <Contents />,
       },
       {
         path: "*",
