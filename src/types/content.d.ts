@@ -19,6 +19,7 @@ export interface CreateContentProps {
     totalAmount?: number;
     contentType: ContentType;
     parentId?: string;
+    childrenIdx?: number;
   };
   genres: PlatformGenre[];
 }
@@ -33,7 +34,10 @@ export interface ContentSimpleResponse {
   title: string;
   description: string;
   imageUrl: string;
+  totalAmount: number;
+  contentType: ContentType;
   series?: ContentSimpleResponse;
+  childrenIdx?: number;
 }
 
 export interface ContentDetailResponse {
@@ -46,6 +50,7 @@ export interface ContentDetailResponse {
   totalAmount: number;
   contentType: ContentType;
   series?: ContentSimpleResponse;
+  childrenIdx?: number;
   genres: GenreResponse[];
   updatedAt: string;
   createdAt: string;

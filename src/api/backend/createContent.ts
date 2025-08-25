@@ -77,6 +77,7 @@ export const createContentSeason = async (
       totalAmount: data.episodes.length,
       contentType: ContentType.SEASON,
       parentId,
+      childrenIdx: data.season_number,
     },
     genres: genres.map((genre) => ({
       platformId,
@@ -106,6 +107,7 @@ export const createContentEpisode = async (
       totalAmount: data.runtime,
       contentType: ContentType.EPISODE,
       parentId,
+      childrenIdx: data.episode_number,
     },
     genres: genres.map((genre) => ({
       platformId,

@@ -8,11 +8,13 @@ export const getReviews = async ({
   memberId,
   page,
   size = 5,
+  signal,
 }: {
   contentId?: string;
   memberId?: string;
   page?: number;
   size?: number;
+  signal?: AbortSignal;
 }): Promise<PageResponse<ReviewDetailResponse>> => {
   const res = await requestAutoRefresh<PageResponse<ReviewDetailResponse>>({
     path: `/api/v1/reviews?sort=createdAt,desc&${
@@ -20,6 +22,7 @@ export const getReviews = async ({
     }${memberId ? `memberId=${memberId}&` : ""}${page ? `page=${page}&` : ""}${
       size ? `size=${size}` : ""
     }`,
+    signal,
   });
 
   if (!res.isSuccess) {

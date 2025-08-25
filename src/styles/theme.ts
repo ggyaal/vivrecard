@@ -302,7 +302,7 @@ export const lightTheme: DefaultTheme = {
       blue: {
         border: "#6076cf",
         background: "#6fb4ff",
-        text: "#294a65",
+        text: "#2981c9",
       },
       sky: {
         border: "#6699c5",

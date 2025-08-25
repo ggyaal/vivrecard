@@ -6,13 +6,17 @@ const requestAutoRefresh = async <T = any>({
   method = "GET",
   headers = {},
   body,
+  signal,
   requiredLogin = true,
+  throwable = true,
 }: {
   path: string;
   method?: string;
   headers?: HeadersInit;
   body?: any;
+  signal?: AbortSignal;
   requiredLogin?: boolean;
+  throwable?: boolean;
 }): Promise<APIResponse<T>> => {
   const doFetch = async (token: string | null) => {
     return fetch(process.env.REACT_APP_API_URL + path, {
@@ -23,6 +27,7 @@ const requestAutoRefresh = async <T = any>({
         "Content-Type": "application/json",
       },
       body: body ? JSON.stringify(body) : undefined,
+      signal,
       credentials: "include",
     });
   };
@@ -42,6 +47,7 @@ const requestAutoRefresh = async <T = any>({
       {
         method: "POST",
         credentials: "include",
+        signal,
       }
     );
 
@@ -62,7 +68,7 @@ const requestAutoRefresh = async <T = any>({
     res = await doFetch(newToken);
   }
 
-  if (!res.ok) {
+  if (throwable && !res.ok) {
     const e = new Error("서버에 문제가 발생하였습니다.") as HttpError;
     e.status = res.status;
     throw e;

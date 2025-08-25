@@ -26,7 +26,7 @@ const Backdrop = styled.div`
   display: grid;
   animation: ${FadeIn} 0.2s ease-in-out both;
   place-items: center;
-  z-index: 1000;
+  z-index: 2000;
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;

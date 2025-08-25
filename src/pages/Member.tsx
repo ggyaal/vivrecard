@@ -3,11 +3,14 @@ import useMember from "../hooks/useMember";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Avatar from "../components/profiles/Avatar";
-import { getTotalExp } from "../utils/memberUtils";
+import {
+  getExpPercent,
+  getTotalExp,
+  LevelBucket,
+  toLevelBucket,
+} from "../utils/memberUtils";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { NavLink } from "react-router-dom";
-
-type LevelBucket = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 const Container = styled.main`
   display: flex;
@@ -159,12 +162,6 @@ const Member = () => {
     );
   }
 
-  const toBucket = (level: number): LevelBucket => {
-    const b = Math.floor(level / 10);
-    const clamped = Math.max(0, Math.min(9, b));
-    return clamped as LevelBucket;
-  };
-
   return (
     <>
       <Helmet>
@@ -182,12 +179,19 @@ const Member = () => {
                 <Email>{member.email}</Email>
               </Top>
               <LevelInfo>
-                <Level $level={toBucket(member.level)}>Lv.{member.level}</Level>
+                <Level $level={toLevelBucket(member.level)}>
+                  Lv.{member.level}
+                </Level>
                 <ExpBar>
-                  <ExpFill style={{ width: `${member.exp % 100}%` }} />
+                  <ExpFill
+                    style={{
+                      width: `${getExpPercent(member.level, member.exp)}%`,
+                    }}
+                  />
                 </ExpBar>
                 <ExpInfo>
-                  {member.exp} / {getTotalExp(member.level)}
+                  {`${getExpPercent(member.level, member.exp).toFixed(2)} % `} (
+                  {member.exp} / {getTotalExp(member.level)})
                 </ExpInfo>
               </LevelInfo>
             </Info>

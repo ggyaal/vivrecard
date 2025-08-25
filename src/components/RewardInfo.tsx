@@ -195,8 +195,11 @@ const RewardInfo = ({ id }: { id: string }) => {
 
       <FooterInfo>
         <FooterWrapper>
-          <span>생성일: {formatRelativeTime(new Date(reward.createdAt))}</span>
-          {reward.createdAt !== reward.updatedAt && (
+          <span>생성: {formatRelativeTime(new Date(reward.createdAt))}</span>
+          {Math.abs(
+            new Date(reward.updatedAt).getTime() -
+              new Date(reward.createdAt).getTime()
+          ) >= 60_000 && (
             <>
               <span>•</span>
               <span>

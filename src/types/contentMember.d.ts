@@ -9,8 +9,8 @@ export interface ContentMemberDetailResponse {
   recommended: number;
   recommendReason: string;
   star: number;
-  consumedAmount: number;
-  reviews: ReviewSimpleResponse[];
+  consumedAmount: number | null;
+  reviewCount: number;
   updatedAt: string;
   createdAt: string;
 }

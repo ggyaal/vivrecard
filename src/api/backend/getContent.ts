@@ -1,9 +1,15 @@
 import { ContentDetailResponse } from "../../types/content";
 import requestAutoRefresh from "../../utils/requestAutoRefresh";
 
-export const getContentId = async (platformId: string, id: string) => {
+export const getContentId = async (
+  platformId: string,
+  id: string,
+  throwable: boolean = true
+) => {
   const res = await requestAutoRefresh({
     path: `/api/v1/platforms/${platformId}/contents/${id}`,
+    requiredLogin: true,
+    throwable,
   });
 
   if (!res.isSuccess) {

@@ -56,7 +56,7 @@ const Season = () => {
           platformId,
           genres: tv.genres,
           saveSeason: async () => {
-            let seriesId = await getContentId(platformId, `tv_${tv.id}`);
+            let seriesId = await getContentId(platformId, `tv_${tv.id}`, false);
             if (!seriesId) {
               const series = await createContentSeries(platformId, tv);
               seriesId = series.id;
