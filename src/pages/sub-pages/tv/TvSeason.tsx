@@ -8,6 +8,7 @@ import FadeInImageCard from "../../../components/FadeInImageCard";
 import { SeasonDetailProps } from "../../../types/tv";
 import ReviewSection from "../../../components/ReviewSection";
 import { ContentType } from "../../../types/contentType";
+import RecommendModal from "../../../components/RecommendModal";
 
 const Container = styled.div`
   display: flex;
@@ -33,9 +34,18 @@ const InfoSection = styled.div`
   overflow-x: auto;
 `;
 
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const Title = styled.h1`
   font-size: 40px;
   margin-bottom: 10px;
+`;
+
+const RecommendArea = styled.div`
+  margin-left: auto;
 `;
 
 const SubTitle = styled.h2`
@@ -114,10 +124,9 @@ const EpisodeImg = styled.img`
 `;
 
 const TvSeason = () => {
-  const { season, seasonId, idRefetch, saveSeason } = useOutletContext<{
+  const { season, seasonId, saveSeason } = useOutletContext<{
     season: SeasonDetailProps;
     seasonId: string | null;
-    idRefetch: () => void;
     saveSeason: (() => Promise<string>) | undefined;
   }>();
 
@@ -137,7 +146,12 @@ const TvSeason = () => {
           )}
         </PosterWrapper>
         <InfoSection>
-          <Title>{season.name}</Title>
+          <TitleWrapper>
+            <Title>{season.name}</Title>
+            <RecommendArea>
+              <RecommendModal contentId={seasonId} saveContent={saveSeason} />
+            </RecommendArea>
+          </TitleWrapper>
           <SubTitle>{`시즌 ${season.season_number}`}</SubTitle>
 
           <Stars score={season.vote_average} showScore={true} />
@@ -177,7 +191,6 @@ const TvSeason = () => {
           id={seasonId}
           contentType={ContentType.SEASON}
           maxAmount={season.episodes.length}
-          idRefetch={idRefetch}
           saveContent={saveSeason}
         />
       )}

@@ -28,7 +28,6 @@ interface ReviewSectionProps {
   id?: string | null;
   contentType: ContentType;
   maxAmount: number;
-  idRefetch: () => void;
   saveContent: () => Promise<string>;
 }
 
@@ -212,7 +211,6 @@ const ReviewSection = ({
   id,
   contentType,
   maxAmount,
-  idRefetch,
   saveContent,
 }: ReviewSectionProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -300,7 +298,6 @@ const ReviewSection = ({
                   onClick={async () => {
                     const contentId = id ? id : await saveContent();
                     if (!contentId) return;
-                    idRefetch();
 
                     const review = await createReview(contentId, {
                       message,

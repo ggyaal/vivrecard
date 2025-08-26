@@ -129,6 +129,7 @@ const createContent = async (platformId: string, data: CreateContentProps) => {
       "Content-Type": "application/json",
     },
     body: data,
+    requiredLogin: true,
   });
 
   return res.data as ContentDetailResponse;

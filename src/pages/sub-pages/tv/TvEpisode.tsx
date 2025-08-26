@@ -10,12 +10,14 @@ import { useQuery } from "@tanstack/react-query";
 import { createContentEpisode } from "../../../api/backend/createContent";
 import { GenreProps } from "../../../types/tmdb";
 import { ContentType } from "../../../types/contentType";
+import RecommendModal from "../../../components/RecommendModal";
 
 const Container = styled.div``;
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
+  gap: 10px;
 `;
 
 const ThumbnailWrapper = styled.div`
@@ -32,15 +34,25 @@ const Thumbnail = styled.img`
 `;
 
 const HeaderInfo = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const Title = styled.h2`
   font-size: 36px;
   font-weight: 600;
   margin-bottom: 10px;
+`;
+
+const RecommendArea = styled.div`
+  margin-left: auto;
 `;
 
 const Subtitle = styled.h3`
@@ -83,12 +95,35 @@ const TvEpisode = () => {
   if (!episode)
     return <Container>선택된 에피소드가 존재하지 않습니다.</Container>;
 
+  const saveContent = async () => {
+    const parentId = seasonId ? seasonId : await saveSeason!();
+
+    const content = await createContentEpisode(
+      parentId,
+      platformId!,
+      episode,
+      genres
+    );
+
+    if (parentId) refetch();
+
+    return content.id;
+  };
+
   return (
     <>
       <Container>
         <Header>
           <HeaderInfo>
-            <Title>{episode.name}</Title>
+            <TitleWrapper>
+              <Title>{episode.name}</Title>
+              <RecommendArea>
+                <RecommendModal
+                  contentId={episodeId}
+                  saveContent={saveSeason ? saveContent : undefined}
+                />
+              </RecommendArea>
+            </TitleWrapper>
             <Subtitle>
               시즌 {episode.season_number} · {episode.episode_number}화
             </Subtitle>
@@ -115,17 +150,7 @@ const TvEpisode = () => {
           id={episodeId}
           contentType={ContentType.EPISODE}
           maxAmount={episode.runtime}
-          idRefetch={refetch}
-          saveContent={async () => {
-            const parentId = seasonId ? seasonId : await saveSeason();
-            const content = await createContentEpisode(
-              parentId,
-              platformId!,
-              episode,
-              genres
-            );
-            return content.id;
-          }}
+          saveContent={saveContent}
         />
       )}
     </>

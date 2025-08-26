@@ -80,14 +80,27 @@ const Tv = () => {
 
   if (isLoading) return <LoadingSpinner />;
 
+  if (!tv)
+    return (
+      <>
+        <Helmet>
+          <title>TV</title>
+          <meta name="description" content="TV page of Vivre Card" />
+        </Helmet>
+        <Container>
+          <div>존재하지 않는 시리즈입니다.</div>
+        </Container>
+      </>
+    );
+
   return (
     <>
       <Helmet>
-        <title>{tv ? tv.name : "TV"}</title>
+        <title>{tv.name}</title>
         <meta name="description" content="Tv page of Vivre Card" />
       </Helmet>
       <Container>
-        <Backdrop $url={`${IMAGE_BASE}/${tv?.backdrop_path}`}>
+        <Backdrop $url={`${IMAGE_BASE}/${tv.backdrop_path}`}>
           <Wrapper>
             <Toolbar>
               <ToolButton size={32} onClick={() => navigate(-1)} />

@@ -29,3 +29,21 @@ export interface ContentMemberStarResponse {
   star: number;
   count: number;
 }
+
+export interface ContentMemberCreateRequest {
+  startAt: string;
+  isCompleted: boolean;
+  recommended?: number;
+  recommendReason?: string;
+  star: number;
+  consumedAmount?: number;
+}
+
+export interface ContentMemberUpdateRequest {
+  isCompleted?: boolean;
+  recommended?: number;
+  recommendReason?: string;
+  startAt?: string;
+  star?: number;
+  consumedAmount?: number;
+}

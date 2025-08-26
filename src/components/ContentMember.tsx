@@ -26,6 +26,7 @@ import { useEffect, useRef } from "react";
 import AmountTag from "./AmountTag";
 import { formatContentSeriseLabel } from "../utils/contentUtils";
 import { ContentType } from "../types/contentType";
+import { CardColor } from "../styles/styled";
 
 const Container = styled.div``;
 
@@ -179,24 +180,23 @@ const ExpText = styled.span`
   text-align: right;
 `;
 
-const ReasonBox = styled.div`
+const ReasonBox = styled.div<{ $color: CardColor }>`
   margin-top: 12px;
   padding: 12px;
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background-color: ${({ $color, theme }) => theme.card[$color].background};
+  border: 1px solid ${({ $color, theme }) => theme.card[$color].border};
+  color: ${({ $color, theme }) => theme.card[$color].text};
   border-radius: 8px;
 `;
 
 const ReasonTitle = styled.div`
   font-size: 12px;
-  color: #64748b;
   margin-bottom: 6px;
 `;
 
 const ReasonText = styled.p`
   margin: 0;
   font-size: 14px;
-  color: #0f172a;
 `;
 
 const ReviewWrapper = styled.div`
@@ -340,6 +340,12 @@ const ContentMember = ({
 
   if (!contentMember) return <div>서버에 문제가 발생하였습니다.</div>;
 
+  const toCardColor = (recommended: number): CardColor => {
+    if (recommended > 0) return "info";
+    if (recommended === 0) return "basic";
+    return "error";
+  };
+
   const content = contentMember.content;
   const member = contentMember.member;
 
@@ -427,8 +433,10 @@ const ContentMember = ({
 
       {contentMember.recommendReason && (
         <Section>
-          <ReasonBox>
-            <ReasonTitle>추천 이유</ReasonTitle>
+          <ReasonBox $color={toCardColor(contentMember.recommended)}>
+            <ReasonTitle>{`${
+              contentMember.recommended < 0 ? "비" : ""
+            }추천 이유`}</ReasonTitle>
             <ReasonText>{contentMember.recommendReason}</ReasonText>
           </ReasonBox>
         </Section>

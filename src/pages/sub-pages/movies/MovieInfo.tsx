@@ -11,6 +11,7 @@ import { getContentId } from "../../../api/backend/getContent";
 import ReviewSection from "../../../components/ReviewSection";
 import { createContentMovie } from "../../../api/backend/createContent";
 import { ContentType } from "../../../types/contentType";
+import RecommendModal from "../../../components/RecommendModal";
 
 const Container = styled.div`
   display: flex;
@@ -35,9 +36,18 @@ const InfoSection = styled.div`
   flex: 1;
 `;
 
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const Title = styled.h1`
   font-size: 40px;
   margin-bottom: 10px;
+`;
+
+const RecommendArea = styled.div`
+  margin-left: auto;
 `;
 
 const SubTitle = styled.h2`
@@ -104,6 +114,12 @@ const MovieInfo = () => {
 
   if (!movie) return <div>영화 정보가 없습니다.</div>;
 
+  const saveContent = async () => {
+    const content = await createContentMovie(platformId!, movie);
+    if (content) refetch();
+    return content.id;
+  };
+
   return (
     <>
       <Container>
@@ -118,7 +134,12 @@ const MovieInfo = () => {
           )}
         </PosterWrapper>
         <InfoSection>
-          <Title>{movie.title}</Title>
+          <TitleWrapper>
+            <Title>{movie.title}</Title>
+            <RecommendArea>
+              <RecommendModal contentId={contentId} saveContent={saveContent} />
+            </RecommendArea>
+          </TitleWrapper>
           {movie.original_title && <SubTitle>{movie.original_title}</SubTitle>}
           {movie.tagline && <Tagline>"{movie.tagline}"</Tagline>}
 
@@ -146,11 +167,7 @@ const MovieInfo = () => {
         id={contentId}
         contentType={ContentType.MOVIE}
         maxAmount={movie.runtime}
-        idRefetch={refetch}
-        saveContent={async () => {
-          const content = await createContentMovie(platformId!, movie);
-          return content.id;
-        }}
+        saveContent={saveContent}
       />
     </>
   );

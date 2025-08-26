@@ -11,6 +11,7 @@ import { getContentId } from "../../../api/backend/getContent";
 import { createContentSeries } from "../../../api/backend/createContent";
 import { useQuery } from "@tanstack/react-query";
 import { ContentType } from "../../../types/contentType";
+import RecommendModal from "../../../components/RecommendModal";
 
 const Container = styled.div`
   display: flex;
@@ -36,9 +37,18 @@ const InfoSection = styled.div`
   overflow-x: auto;
 `;
 
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const Title = styled.h1`
   font-size: 40px;
   margin-bottom: 10px;
+`;
+
+const RecommendArea = styled.div`
+  margin-left: auto;
 `;
 
 const SubTitle = styled.h2`
@@ -86,23 +96,27 @@ const Meta = styled.div``;
 
 const TvSerise = () => {
   const { search } = useLocation();
-  const { tv } = useOutletContext<{ tv: TvDetailProps | undefined }>();
+  const { tv } = useOutletContext<{ tv: TvDetailProps }>();
   const { data: platformId } = useQuery<string | null>({
     queryKey: ["platformId", "TMDB"],
     queryFn: () => getPlatformId("TMDB"),
     retry: false,
   });
   const { data: contentId, refetch } = useQuery<string | null>({
-    queryKey: ["contentId", "TMDB", tv?.id],
+    queryKey: ["contentId", "TMDB", tv.id],
     queryFn: () =>
-      platformId ? getContentId(platformId, `tv_${tv!.id}`) : null,
+      platformId ? getContentId(platformId, `tv_${tv.id}`) : null,
     enabled: !!tv && !!platformId,
     retry: false,
   });
 
   const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 
-  if (!tv) return <div>TV 정보가 없습니다.</div>;
+  const saveContent = async () => {
+    const content = await createContentSeries(platformId!, tv);
+    if (content) refetch();
+    return content.id;
+  };
 
   return (
     <>
@@ -115,7 +129,12 @@ const TvSerise = () => {
           )}
         </PosterWrapper>
         <InfoSection>
-          <Title>{tv.name}</Title>
+          <TitleWrapper>
+            <Title>{tv.name}</Title>
+            <RecommendArea>
+              <RecommendModal contentId={contentId} saveContent={saveContent} />
+            </RecommendArea>
+          </TitleWrapper>
           <SubTitle>{tv.original_name}</SubTitle>
           {tv.tagline && <Tagline>"{tv.tagline}"</Tagline>}
 
@@ -143,11 +162,7 @@ const TvSerise = () => {
         id={contentId}
         contentType={ContentType.SERIES}
         maxAmount={tv.number_of_seasons}
-        idRefetch={refetch}
-        saveContent={async () => {
-          const content = await createContentSeries(platformId!, tv);
-          return content.id;
-        }}
+        saveContent={saveContent}
       />
     </>
   );

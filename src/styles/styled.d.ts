@@ -199,6 +199,8 @@ declare module "styled-components" {
   }
 }
 
+export type CardColor = "basic" | "info" | "warn" | "error";
+
 export type TagColor =
   | "default"
   | "red"
