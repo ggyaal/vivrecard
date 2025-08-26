@@ -33,6 +33,7 @@ const Poster = styled.img`
 `;
 
 const InfoSection = styled.div`
+  width: 100%;
   max-width: 810px;
   overflow-x: auto;
 `;
@@ -151,10 +152,11 @@ const TvSerise = () => {
               작품 소개
             </MenuItem>
             <MenuItem to={{ pathname: "seasons", search }}>시즌</MenuItem>
+            <MenuItem to={{ pathname: "watched", search }}>봤어요</MenuItem>
           </Menu>
 
           <Meta>
-            <Outlet context={{ tv }} />
+            <Outlet context={{ tv, contentId }} />
           </Meta>
         </InfoSection>
       </Container>

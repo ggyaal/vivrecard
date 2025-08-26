@@ -6,6 +6,9 @@ const Container = styled.div<{ $size: number; $active: boolean }>`
   height: ${({ $size }) => $size}px;
   border: 1px solid ${({ theme }) => theme.colors.primary};
   border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 5px;
   ${({ $active }) => {
     if (!$active) return "";

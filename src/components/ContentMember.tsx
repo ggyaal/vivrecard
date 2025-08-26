@@ -27,6 +27,7 @@ import AmountTag from "./AmountTag";
 import { formatContentSeriseLabel } from "../utils/contentUtils";
 import { ContentType } from "../types/contentType";
 import { CardColor } from "../styles/styled";
+import { recommendedToCardColor } from "../utils/contentMemberUtils";
 
 const Container = styled.div``;
 
@@ -195,8 +196,12 @@ const ReasonTitle = styled.div`
 `;
 
 const ReasonText = styled.p`
+  max-height: 300px;
+  height: fit-content;
   margin: 0;
   font-size: 14px;
+  white-space: pre;
+  overflow: auto;
 `;
 
 const ReviewWrapper = styled.div`
@@ -340,12 +345,6 @@ const ContentMember = ({
 
   if (!contentMember) return <div>서버에 문제가 발생하였습니다.</div>;
 
-  const toCardColor = (recommended: number): CardColor => {
-    if (recommended > 0) return "info";
-    if (recommended === 0) return "basic";
-    return "error";
-  };
-
   const content = contentMember.content;
   const member = contentMember.member;
 
@@ -433,7 +432,7 @@ const ContentMember = ({
 
       {contentMember.recommendReason && (
         <Section>
-          <ReasonBox $color={toCardColor(contentMember.recommended)}>
+          <ReasonBox $color={recommendedToCardColor(contentMember.recommended)}>
             <ReasonTitle>{`${
               contentMember.recommended < 0 ? "비" : ""
             }추천 이유`}</ReasonTitle>

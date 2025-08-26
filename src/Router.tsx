@@ -26,6 +26,7 @@ import Collection from "./pages/Collection";
 import Rewards from "./pages/Rewards";
 import ErrorPage from "./pages/ErrorPage";
 import Contents from "./pages/Contents";
+import ContentWatched from "./pages/sub-pages/ContentWatched";
 
 const router = createBrowserRouter([
   {
@@ -85,6 +86,10 @@ const router = createBrowserRouter([
                     path: "collection",
                     element: <MovieCollection />,
                   },
+                  {
+                    path: "watched",
+                    element: <ContentWatched />,
+                  },
                 ],
               },
             ],
@@ -117,6 +122,10 @@ const router = createBrowserRouter([
                   {
                     path: "seasons",
                     element: <TvSeasons />,
+                  },
+                  {
+                    path: "watched",
+                    element: <ContentWatched />,
                   },
                 ],
               },

@@ -166,14 +166,21 @@ const RecommendModal = ({
   const [star, setStar] = useState<number>(0);
   const [watched, setWatched] = useState<boolean>(false);
   const { data: member } = useMember();
-  const { data: contentMember, isLoading } =
-    useQuery<ContentMemberDetailResponse>({
-      queryKey: ["content", contentId, "member", member?.id],
-      queryFn: () =>
-        getContentMember({ contentId: contentId!, memberId: member!.id }),
-      retry: false,
-      enabled: !!contentId && !!member,
-    });
+  const {
+    data: contentMember,
+    isLoading,
+    refetch,
+  } = useQuery<ContentMemberDetailResponse>({
+    queryKey: ["content", contentId, "member", member?.id],
+    queryFn: () =>
+      getContentMember({ contentId: contentId!, memberId: member!.id }),
+    retry: false,
+    enabled: !!contentId && !!member,
+  });
+
+  useEffect(() => {
+    if (open) refetch();
+  }, [open, refetch]);
 
   useEffect(() => {
     if (isLoading || !contentMember) return;

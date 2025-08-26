@@ -34,6 +34,7 @@ const Poster = styled.img`
 
 const InfoSection = styled.div`
   flex: 1;
+  overflow: auto;
 `;
 
 const TitleWrapper = styled.div`
@@ -156,10 +157,11 @@ const MovieInfo = () => {
               작품 소개
             </MenuItem>
             <MenuItem to={{ pathname: "collection", search }}>시리즈</MenuItem>
+            <MenuItem to={{ pathname: "watched", search }}>봤어요</MenuItem>
           </Menu>
 
           <Meta>
-            <Outlet context={{ movie }} />
+            <Outlet context={{ movie, contentId }} />
           </Meta>
         </InfoSection>
       </Container>
