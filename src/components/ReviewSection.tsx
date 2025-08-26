@@ -11,11 +11,7 @@ import {
 import { PageResponse } from "../types/api";
 import { ReviewDetailResponse } from "../types/review";
 import createReview from "../api/backend/createReview";
-import {
-  keepPreviousData,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ContentMemberStarResponse } from "../types/contentMember";
 import { formatRelativeTime } from "../utils/timeUtils";
 import { useSearchParams } from "react-router-dom";
@@ -41,12 +37,27 @@ const Wrapper = styled.div`
 `;
 
 const WriterContainer = styled.div`
+  position: relative;
   display: flex;
-  align-items: flex-start;
+  justify-content: center;
   gap: 10px;
   box-shadow: 1px 1px 15px ${({ theme }) => theme.content.block.background};
   padding: 20px;
   border-radius: 10px;
+`;
+
+const ErrorBox = styled.div<{ $active: boolean }>`
+  position: absolute;
+  top: -20px;
+  border: 1px solid ${({ theme }) => theme.card.error.border};
+  background-color: ${({ theme }) => theme.card.error.background};
+  color: ${({ theme }) => theme.card.error.text};
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: opacity 0.2s ease;
+  opacity: ${({ $active }) => ($active ? 1 : 0)};
 `;
 
 const AvatarWrapper = styled.div`
@@ -216,12 +227,12 @@ const ReviewSection = ({
   const [searchParams, setSearchParams] = useSearchParams();
   const reviewPage = searchParams.get("reviewPage");
   const reviewPageNumber = Number(reviewPage) > 0 ? Number(reviewPage) - 1 : 0;
-  const qc = useQueryClient();
   const { data: member, isLoading } = useMember();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [star, setStar] = useState<number>(0);
   const [amount, setAmount] = useState<number>(0);
   const [message, setMessage] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const {
     data: reviews,
     isLoading: reviewLoading,
@@ -234,21 +245,33 @@ const ReviewSection = ({
     enabled: !!id && !!member,
     placeholderData: keepPreviousData,
   });
-  const { data: reviewStars } = useQuery<ContentMemberStarResponse | null>({
-    queryKey: ["review", "stars", id],
-    queryFn: () => getReviewStars(id!),
-    enabled: !!id && !!reviews && !!member,
-  });
+  const { data: reviewStars, refetch: starRefatch } =
+    useQuery<ContentMemberStarResponse | null>({
+      queryKey: ["review", "stars", id],
+      queryFn: () => getReviewStars(id!),
+      enabled: !!id && !!reviews && !!member,
+    });
 
   const prevUpdatedAt = useRef(dataUpdatedAt);
+  const amountBar = useRef<HTMLInputElement>(null);
+
+  const setAmountGroup = (value: number) => {
+    setAmount(value);
+    if (amountBar.current) {
+      amountBar.current.style.setProperty(
+        "--val",
+        `${(value / maxAmount) * 100}%`
+      );
+    }
+  };
 
   useEffect(() => {
     if (!reviews) return;
 
     if (prevUpdatedAt.current === dataUpdatedAt) return;
     prevUpdatedAt.current = dataUpdatedAt;
-    qc.invalidateQueries({ queryKey: [id, "reviewStars"] });
-  }, [id, reviews, qc, dataUpdatedAt]);
+    starRefatch();
+  }, [id, reviews, dataUpdatedAt, starRefatch]);
 
   const handleInput = (e: React.InputEvent<HTMLTextAreaElement>) => {
     const el = inputRef.current;
@@ -270,16 +293,13 @@ const ReviewSection = ({
               <ButtonWrapper>
                 <AmountContainer>
                   <AmountInput
+                    ref={amountBar}
                     type="range"
                     min="0"
                     max={maxAmount}
                     onChange={(e) => {
                       const value = Number(e.target.value);
-                      setAmount(value);
-                      e.target.style.setProperty(
-                        "--val",
-                        `${(value / maxAmount) * 100}%`
-                      );
+                      setAmountGroup(value);
                     }}
                     value={amount}
                   />
@@ -296,8 +316,21 @@ const ReviewSection = ({
                 />
                 <SubmitButton
                   onClick={async () => {
+                    if (message.length === 0) {
+                      setError("메세지를 작성해야 등록 가능합니다.");
+
+                      setTimeout(() => setError(""), 2000);
+                      return;
+                    }
+
                     const contentId = id ? id : await saveContent();
-                    if (!contentId) return;
+
+                    if (!contentId) {
+                      setError("데이터를 로드하는데 문제가 발생하였습니다..");
+
+                      setTimeout(() => setError(""), 2000);
+                      return;
+                    }
 
                     const review = await createReview(contentId, {
                       message,
@@ -307,7 +340,7 @@ const ReviewSection = ({
 
                     if (review) {
                       setMessage("");
-                      setAmount(0);
+                      setAmountGroup(0);
                       setStar(0);
                       refetch();
                     }
@@ -325,6 +358,7 @@ const ReviewSection = ({
                 onChange={(e) => setMessage(e.target.value)}
               />
             </WriterWrapper>
+            <ErrorBox $active={error.length > 0}>{error}</ErrorBox>
           </WriterContainer>
         )}
       </Wrapper>

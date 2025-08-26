@@ -58,6 +58,7 @@ const Title = styled.h2`
 `;
 
 const Description = styled.p`
+  max-width: 800px;
   max-height: 500px;
   margin: 0;
   line-height: 1.55;
@@ -146,6 +147,7 @@ const RewardInfo = ({ id }: { id: string }) => {
   const { data: reward, isLoading } = useQuery({
     queryKey: ["reward", id],
     queryFn: () => getReward(id),
+    retry: false,
   });
 
   if (isLoading) return <LoadingSpinner />;

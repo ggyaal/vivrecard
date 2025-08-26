@@ -10,6 +10,7 @@ export const getTheme = async (memberId: string): Promise<string> => {
   const res = await requestAutoRefresh({
     path: `/api/v1/members/${memberId}/themes`,
     requiredLogin: true,
+    throwable: false,
   });
 
   if (!res.isSuccess) {
