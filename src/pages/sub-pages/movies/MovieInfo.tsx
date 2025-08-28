@@ -6,12 +6,12 @@ import { LuPopcorn } from "react-icons/lu";
 import { NavLink } from "react-router-dom";
 import { MovieDetailProps } from "../../../types/movie";
 import { useQuery } from "@tanstack/react-query";
-import { getPlatformId } from "../../../api/backend/getPlatform";
 import { getContentId } from "../../../api/backend/getContent";
 import ReviewSection from "../../../components/ReviewSection";
 import { createContentMovie } from "../../../api/backend/createContent";
 import { ContentType } from "../../../types/contentType";
 import RecommendModal from "../../../components/RecommendModal";
+import { PlatformProvider } from "../../../types/platformType";
 
 const Container = styled.div`
   display: flex;
@@ -99,15 +99,13 @@ const Meta = styled.div``;
 const MovieInfo = () => {
   const { search } = useLocation();
   const { movie } = useOutletContext<{ movie: MovieDetailProps }>();
-  const { data: platformId } = useQuery<string | null>({
-    queryKey: ["platformId", "TMDB"],
-    queryFn: () => getPlatformId("TMDB"),
-  });
   const { data: contentId, refetch } = useQuery<string | null>({
-    queryKey: ["contentId", "TMDB", movie.id],
+    queryKey: ["TMDB", movie.id, "contentId"],
     queryFn: () =>
-      platformId ? getContentId(platformId, `movie_${movie.id}`) : null,
-    enabled: !!platformId,
+      getContentId({
+        platformId: PlatformProvider.TMDB,
+        id: `movie_${movie.id}`,
+      }),
     retry: false,
   });
 
@@ -116,7 +114,10 @@ const MovieInfo = () => {
   if (!movie) return <div>영화 정보가 없습니다.</div>;
 
   const saveContent = async () => {
-    const content = await createContentMovie(platformId!, movie);
+    const content = await createContentMovie({
+      platformId: PlatformProvider.TMDB,
+      data: movie,
+    });
     if (content) refetch();
     return content.id;
   };

@@ -3,13 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { seasonDetail } from "../api/tmdb/tmdb";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { SeasonDetailProps, TvDetailProps } from "../types/tv";
-import { getPlatformId } from "../api/backend/getPlatform";
 import { getContentId } from "../api/backend/getContent";
 import {
   createContentSeason,
   createContentSeries,
 } from "../api/backend/createContent";
 import { Helmet } from "react-helmet-async";
+import { PlatformProvider } from "../types/platformType";
 
 const Season = () => {
   const { number } = useParams();
@@ -20,18 +20,14 @@ const Season = () => {
     enabled: !!tv,
   });
 
-  const { data: platformId, isLoading: platformIdLoading } = useQuery<
-    string | null
-  >({
-    queryKey: ["platformId", "TMDB"],
-    queryFn: () => getPlatformId("TMDB"),
-  });
-
   const { data: seasonId, refetch } = useQuery<string | null>({
-    queryKey: ["contentId", "TMDB", tv.id],
+    queryKey: ["TMDB", tv.id, "contentId"],
     queryFn: () =>
-      platformId ? getContentId(platformId, `season_${season!.id}`) : null,
-    enabled: !!tv && !!platformId && !!season,
+      getContentId({
+        platformId: PlatformProvider.TMDB,
+        id: `season_${season!.id}`,
+      }),
+    enabled: !!tv && !!season,
     retry: false,
   });
 
@@ -39,21 +35,25 @@ const Season = () => {
 
   if (!season) return <div>TV 정보가 없습니다.</div>;
 
-  if (platformIdLoading || !platformId)
-    return <Outlet context={{ season, seasonId }} />;
-
   const saveContent = async () => {
-    let seriesId = await getContentId(platformId, `tv_${tv.id}`, false);
+    let seriesId = await getContentId({
+      platformId: PlatformProvider.TMDB,
+      id: `tv_${tv.id}`,
+      throwable: false,
+    });
     if (!seriesId) {
-      const series = await createContentSeries(platformId, tv);
+      const series = await createContentSeries({
+        platformId: PlatformProvider.TMDB,
+        data: tv,
+      });
       seriesId = series.id;
     }
-    const content = await createContentSeason(
-      seriesId,
-      platformId,
-      season,
-      tv.genres
-    );
+    const content = await createContentSeason({
+      parentId: seriesId,
+      platformId: PlatformProvider.TMDB,
+      data: season,
+      genres: tv.genres,
+    });
 
     if (content) refetch();
 
@@ -70,7 +70,6 @@ const Season = () => {
         context={{
           season,
           seasonId,
-          platformId,
           genres: tv.genres,
           saveSeason: saveContent,
         }}

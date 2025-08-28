@@ -11,6 +11,7 @@ import { createContentEpisode } from "../../../api/backend/createContent";
 import { GenreProps } from "../../../types/tmdb";
 import { ContentType } from "../../../types/contentType";
 import RecommendModal from "../../../components/RecommendModal";
+import { PlatformProvider } from "../../../types/platformType";
 
 const Container = styled.div``;
 
@@ -72,23 +73,23 @@ const Overview = styled.p`
 
 const TvEpisode = () => {
   const { episodeNumber } = useParams();
-  const { season, seasonId, platformId, genres, saveSeason } =
-    useOutletContext<{
-      season: SeasonDetailProps;
-      seasonId: string | null;
-      platformId: string | null;
-      genres: GenreProps[];
-      saveSeason: (() => Promise<string>) | undefined;
-    }>();
+  const { season, seasonId, genres, saveSeason } = useOutletContext<{
+    season: SeasonDetailProps;
+    seasonId: string | null;
+    genres: GenreProps[];
+    saveSeason: (() => Promise<string>) | undefined;
+  }>();
   const episode = season.episodes.find(
     (ep) => ep.episode_number === Number(episodeNumber)
   );
 
   const { data: episodeId, refetch } = useQuery<string | null>({
-    queryKey: ["contentId", "TMDB", season.id, episodeNumber],
+    queryKey: ["TMDB", season.id, episodeNumber, "contentId"],
     queryFn: () =>
-      platformId ? getContentId(platformId, `episode_${episode!.id}`) : null,
-    enabled: !!platformId,
+      getContentId({
+        platformId: PlatformProvider.TMDB,
+        id: `episode_${episode!.id}`,
+      }),
     retry: false,
   });
 
@@ -98,12 +99,12 @@ const TvEpisode = () => {
   const saveContent = async () => {
     const parentId = seasonId ? seasonId : await saveSeason!();
 
-    const content = await createContentEpisode(
+    const content = await createContentEpisode({
       parentId,
-      platformId!,
-      episode,
-      genres
-    );
+      platformId: PlatformProvider.TMDB,
+      data: episode,
+      genres,
+    });
 
     if (parentId) refetch();
 

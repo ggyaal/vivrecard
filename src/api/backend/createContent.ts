@@ -7,10 +7,15 @@ import requestAutoRefresh from "../../utils/requestAutoRefresh";
 
 const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 
-export const createContentMovie = async (
-  platformId: string,
-  data: MovieDetailProps
-) => {
+export const createContentMovie = async ({
+  platformId,
+  data,
+  isProvider = true,
+}: {
+  platformId: string;
+  data: MovieDetailProps;
+  isProvider?: boolean;
+}) => {
   const req: CreateContentProps = {
     idInPlatform: `movie_${data.id}`,
     content: {
@@ -31,13 +36,18 @@ export const createContentMovie = async (
     })),
   };
 
-  return await createContent(platformId, req);
+  return await createContent(platformId, req, isProvider);
 };
 
-export const createContentSeries = async (
-  platformId: string,
-  data: TvDetailProps
-) => {
+export const createContentSeries = async ({
+  platformId,
+  data,
+  isProvider = true,
+}: {
+  platformId: string;
+  data: TvDetailProps;
+  isProvider?: boolean;
+}) => {
   const req: CreateContentProps = {
     idInPlatform: `tv_${data.id}`,
     content: {
@@ -58,15 +68,22 @@ export const createContentSeries = async (
     })),
   };
 
-  return await createContent(platformId, req);
+  return await createContent(platformId, req, isProvider);
 };
 
-export const createContentSeason = async (
-  parentId: string,
-  platformId: string,
-  data: SeasonDetailProps,
-  genres: GenreProps[]
-) => {
+export const createContentSeason = async ({
+  parentId,
+  platformId,
+  data,
+  genres,
+  isProvider = true,
+}: {
+  parentId: string;
+  platformId: string;
+  data: SeasonDetailProps;
+  genres: GenreProps[];
+  isProvider?: boolean;
+}) => {
   const req: CreateContentProps = {
     idInPlatform: `season_${data.id}`,
     content: {
@@ -88,15 +105,22 @@ export const createContentSeason = async (
     })),
   };
 
-  return await createContent(platformId, req);
+  return await createContent(platformId, req, isProvider);
 };
 
-export const createContentEpisode = async (
-  parentId: string,
-  platformId: string,
-  data: EpisodeProps,
-  genres: GenreProps[]
-) => {
+export const createContentEpisode = async ({
+  parentId,
+  platformId,
+  data,
+  genres,
+  isProvider = true,
+}: {
+  parentId: string;
+  platformId: string;
+  data: EpisodeProps;
+  genres: GenreProps[];
+  isProvider?: boolean;
+}) => {
   const req: CreateContentProps = {
     idInPlatform: `episode_${data.id}`,
     content: {
@@ -118,12 +142,18 @@ export const createContentEpisode = async (
     })),
   };
 
-  return await createContent(platformId, req);
+  return await createContent(platformId, req, isProvider);
 };
 
-const createContent = async (platformId: string, data: CreateContentProps) => {
+const createContent = async (
+  platformId: string,
+  data: CreateContentProps,
+  isProvider: boolean
+) => {
   const res = await requestAutoRefresh({
-    path: `/api/v1/platforms/${platformId}/contents`,
+    path: `/api/v1/platforms${
+      isProvider ? "/provider" : ""
+    }/${platformId}/contents`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",

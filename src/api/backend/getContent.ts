@@ -35,13 +35,21 @@ export const getContents = async ({
   return res.data;
 };
 
-export const getContentId = async (
-  platformId: string,
-  id: string,
-  throwable: boolean = true
-) => {
+export const getContentId = async ({
+  platformId,
+  id,
+  throwable = true,
+  isProvider = true,
+}: {
+  platformId: string;
+  id: string;
+  throwable?: boolean;
+  isProvider?: boolean;
+}) => {
   const res = await requestAutoRefresh({
-    path: `/api/v1/platforms/${platformId}/contents/${id}`,
+    path: `/api/v1/platforms${
+      isProvider ? "/provider" : ""
+    }/${platformId}/contents/${id}`,
     requiredLogin: true,
     throwable,
   });

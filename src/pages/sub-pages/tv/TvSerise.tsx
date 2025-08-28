@@ -6,12 +6,12 @@ import { ImTv } from "react-icons/im";
 import IconImage from "../../../components/IconImage";
 import { TvDetailProps } from "../../../types/tv";
 import ReviewSection from "../../../components/ReviewSection";
-import { getPlatformId } from "../../../api/backend/getPlatform";
 import { getContentId } from "../../../api/backend/getContent";
 import { createContentSeries } from "../../../api/backend/createContent";
 import { useQuery } from "@tanstack/react-query";
 import { ContentType } from "../../../types/contentType";
 import RecommendModal from "../../../components/RecommendModal";
+import { PlatformProvider } from "../../../types/platformType";
 
 const Container = styled.div`
   display: flex;
@@ -98,23 +98,24 @@ const Meta = styled.div``;
 const TvSerise = () => {
   const { search } = useLocation();
   const { tv } = useOutletContext<{ tv: TvDetailProps }>();
-  const { data: platformId } = useQuery<string | null>({
-    queryKey: ["platformId", "TMDB"],
-    queryFn: () => getPlatformId("TMDB"),
-    retry: false,
-  });
   const { data: contentId, refetch } = useQuery<string | null>({
-    queryKey: ["contentId", "TMDB", tv.id],
+    queryKey: ["TMDB", tv.id, "contentId"],
     queryFn: () =>
-      platformId ? getContentId(platformId, `tv_${tv.id}`) : null,
-    enabled: !!tv && !!platformId,
+      getContentId({
+        platformId: PlatformProvider.TMDB,
+        id: `tv_${tv.id}`,
+      }),
+    enabled: !!tv,
     retry: false,
   });
 
   const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 
   const saveContent = async () => {
-    const content = await createContentSeries(platformId!, tv);
+    const content = await createContentSeries({
+      platformId: PlatformProvider.TMDB,
+      data: tv,
+    });
     if (content) refetch();
     return content.id;
   };
