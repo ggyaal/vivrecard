@@ -7,6 +7,7 @@ export interface ReviewDetailResponse {
   star: number;
   completedCount: number;
   consumedAmount: number;
+  isSpoiler: boolean;
   updatedAt: string;
   createdAt: string;
 }
@@ -18,6 +19,7 @@ export interface ReviewSimpleResponse {
   message: string;
   star: number;
   consumedAmount: number;
+  isSpoiler: boolean;
   updatedAt: string;
   createdAt: string;
 }

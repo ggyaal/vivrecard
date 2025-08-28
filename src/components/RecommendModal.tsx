@@ -11,6 +11,7 @@ import {
   updateContentMember,
 } from "../api/backend/putContentMember";
 import StarSelector from "./StarSelector";
+import CheckBox from "./CheckBox";
 
 interface RecommendModalProps {
   contentId?: string | null;
@@ -44,49 +45,8 @@ const StarWrapper = styled.div`
   z-index: 1;
 `;
 
-const CompletedBox = styled.label`
+const CompletedBox = styled(CheckBox)`
   margin-left: auto;
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-
-  & > input {
-    display: none;
-  }
-
-  & > span {
-    width: 20px;
-    height: 20px;
-    border: 1px solid ${({ theme }) => theme.content.tag.sky.border};
-    background-color: ${({ theme }) => theme.content.tag.sky.background};
-    display: inline-block;
-    position: relative;
-    cursor: pointer;
-    margin-left: 8px;
-    border-radius: 4px;
-  }
-
-  & > span::after {
-    content: "";
-    position: absolute;
-    display: none;
-    left: 5px;
-    top: 1px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-  }
-
-  & > input:checked + span {
-    background-color: #4caf50;
-    border-color: #4caf50;
-  }
-
-  & > input:checked + span::after {
-    display: block;
-  }
 `;
 
 const RecommendList = styled.div`
@@ -179,8 +139,8 @@ const RecommendModal = ({
   });
 
   useEffect(() => {
-    if (open) refetch();
-  }, [open, refetch]);
+    if (contentId) refetch();
+  }, [contentId, open, refetch]);
 
   useEffect(() => {
     if (isLoading || !contentMember) return;
@@ -216,14 +176,8 @@ const RecommendModal = ({
                   setValue={setStar}
                 />
               </StarWrapper>
-              <CompletedBox>
+              <CompletedBox checked={watched} setChecked={setWatched}>
                 이미 시청함
-                <input
-                  type="checkbox"
-                  checked={watched}
-                  onChange={(e) => setWatched(e.target.checked)}
-                />
-                <span></span>
               </CompletedBox>
             </ModalWrapper>
           )}

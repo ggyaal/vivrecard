@@ -28,6 +28,7 @@ import { formatContentSeriseLabel } from "../utils/contentUtils";
 import { ContentType } from "../types/contentType";
 import { CardColor } from "../styles/styled";
 import { recommendedToCardColor } from "../utils/contentMemberUtils";
+import SpoilerText from "./SpolierText";
 
 const Container = styled.div``;
 
@@ -259,7 +260,12 @@ const ReviewMeta = styled.span`
 `;
 
 const ReviewMessage = styled.p`
-  margin: 8px 0 10px;
+  margin-bottom: 10px;
+  line-height: 1.6;
+`;
+
+const ReviewSpoilerMessage = styled(SpoilerText)`
+  margin-bottom: 10px;
   line-height: 1.6;
 `;
 
@@ -482,7 +488,11 @@ const ContentMember = ({
                         </ReviewContent>
                       )}
                     </ReviewHeader>
-                    <ReviewMessage>{r.message}</ReviewMessage>
+                    {r.isSpoiler ? (
+                      <ReviewSpoilerMessage>{r.message}</ReviewSpoilerMessage>
+                    ) : (
+                      <ReviewMessage>{r.message}</ReviewMessage>
+                    )}
                     <ReviewFooter>
                       <ReviewMeta>{formatDateTime(r.createdAt)}</ReviewMeta>
                       {Math.abs(

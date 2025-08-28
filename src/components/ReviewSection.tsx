@@ -19,6 +19,8 @@ import PageNav from "./PageNav";
 import { ContentType } from "../types/contentType";
 import { formatAmount, formatAmountByContentType } from "../utils/contentUtils";
 import AmountTag from "./AmountTag";
+import SpoilerText from "./SpolierText";
+import CheckBox from "./CheckBox";
 
 interface ReviewSectionProps {
   id?: string | null;
@@ -70,11 +72,15 @@ const ButtonWrapper = styled.div`
   gap: 10px;
 `;
 
+const SpoilerBox = styled(CheckBox)`
+  margin-left: auto;
+  font-size: 16px;
+`;
+
 const SubmitButton = styled.button`
   padding: 10px 20px;
   border: 1px solid ${({ theme }) => theme.colors.paleText};
   border-radius: 5px;
-  margin-left: auto;
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.primary};
@@ -232,6 +238,7 @@ const ReviewSection = ({
   const [star, setStar] = useState<number>(0);
   const [amount, setAmount] = useState<number>(0);
   const [message, setMessage] = useState<string>("");
+  const [spoiler, setSpoiler] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const {
     data: reviews,
@@ -314,6 +321,9 @@ const ReviewSection = ({
                   value={star}
                   setValue={setStar}
                 />
+                <SpoilerBox checked={spoiler} setChecked={setSpoiler}>
+                  스포일러 포함
+                </SpoilerBox>
                 <SubmitButton
                   onClick={async () => {
                     if (message.length === 0) {
@@ -336,6 +346,7 @@ const ReviewSection = ({
                       message,
                       star,
                       consumedAmount: amount,
+                      isSpoiler: spoiler,
                     });
 
                     if (review) {
@@ -414,7 +425,13 @@ const ReviewSection = ({
                       {formatRelativeTime(new Date(review.createdAt))}
                     </ReviewDate>
                   </ReviewWrapper>
-                  <ReviewComment>{review.message}</ReviewComment>
+                  <ReviewComment>
+                    {review.isSpoiler ? (
+                      <SpoilerText>{review.message}</SpoilerText>
+                    ) : (
+                      review.message
+                    )}
+                  </ReviewComment>
                 </ReviewContainer>
               ))
             ) : (

@@ -38,12 +38,12 @@ const Chips = styled.div`
   gap: 8px;
 `;
 
-const Chip = styled.span<{ tone?: TagColor }>`
-  ${({ tone = "sky", theme }) => {
+const Chip = styled.span<{ $tone?: TagColor }>`
+  ${({ $tone = "sky", theme }) => {
     return css`
-      border: 1px solid ${({ theme }) => theme.content.tag[tone].border};
-      background: ${theme.content.tag[tone].background};
-      color: ${theme.content.tag[tone].text};
+      border: 1px solid ${({ theme }) => theme.content.tag[$tone].border};
+      background: ${theme.content.tag[$tone].background};
+      color: ${theme.content.tag[$tone].text};
     `;
   }}
   padding:6px 10px;
@@ -159,11 +159,11 @@ const RewardInfo = ({ id }: { id: string }) => {
       <Title>{reward.title}</Title>
       <Row>
         <Chips>
-          <Chip tone="blue">{labelForDomain[reward.sourceType]}</Chip>
-          <Chip tone={reward.reward ? "sky" : "yellow"}>
+          <Chip $tone="blue">{labelForDomain[reward.sourceType]}</Chip>
+          <Chip $tone={reward.reward ? "sky" : "yellow"}>
             {labelForReward[reward.rewardType]}
           </Chip>
-          <Chip tone={reward.isPublic ? "green" : "red"}>
+          <Chip $tone={reward.isPublic ? "green" : "red"}>
             {reward.isPublic ? "Public" : "Private"}
           </Chip>
         </Chips>

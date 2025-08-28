@@ -4,6 +4,7 @@ interface CreateReviewRequest {
   message: string;
   star: number;
   consumedAmount?: number;
+  isSpoiler?: boolean;
 }
 
 const createReview = async (contentId: string, data: CreateReviewRequest) => {
