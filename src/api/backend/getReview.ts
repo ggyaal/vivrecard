@@ -22,6 +22,7 @@ export const getReviews = async ({
     path: `/api/v1/contents/${contentId}/members/${memberId}/reviews?sort=created_at,desc&includeChildren=${includeChildren}&${
       page ? `page=${page}&` : ""
     }${size ? `size=${size}` : ""}`,
+    requiredLogin: true,
     signal,
   });
 
@@ -47,6 +48,7 @@ export const getReviewsByContentId = async ({
     path: `/api/v1/contents/${contentId}/reviews?sort=createdAt,desc&${
       page ? `page=${page}` : ""
     }${size ? `size=${size}&` : ""}`,
+    requiredLogin: true,
     signal,
   });
 
@@ -72,6 +74,7 @@ export const getReviewsByMemberId = async ({
     path: `/api/v1/members/${memberId}/reviews?sort=createdAt,desc&${
       page ? `page=${page}` : ""
     }${size ? `size=${size}&` : ""}`,
+    requiredLogin: true,
     signal,
   });
 
@@ -87,6 +90,7 @@ export const getReviewStars = async (
 ): Promise<ContentMemberStarResponse> => {
   const res = await requestAutoRefresh<ContentMemberStarResponse>({
     path: `/api/v1/contents/${contentId}/stars`,
+    requiredLogin: true,
   });
 
   if (!res.isSuccess) {

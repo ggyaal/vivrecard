@@ -24,11 +24,19 @@ import { ReviewDetailResponse } from "../types/review";
 import { getReviews } from "../api/backend/getReview";
 import { useEffect, useRef } from "react";
 import AmountTag from "./AmountTag";
-import { formatContentSeriseLabel } from "../utils/contentUtils";
+import {
+  formatContentSeriseLabel,
+  idInPlatformToLink,
+} from "../utils/contentUtils";
 import { ContentType } from "../types/contentType";
 import { CardColor } from "../styles/styled";
 import { recommendedToCardColor } from "../utils/contentMemberUtils";
 import SpoilerText from "./SpolierText";
+import { PlatformProvider } from "../types/platformType";
+import { getPlatformContentById } from "../api/backend/platformContent";
+import { PlatformContentResponse } from "../types/platformContent";
+import { PiMagnifyingGlassPlusBold } from "react-icons/pi";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div``;
 
@@ -69,11 +77,33 @@ const SeriesBadge = styled.span`
   color: #3730a3;
 `;
 
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
 const Title = styled.h2`
   margin: 0;
   font-size: 22px;
   line-height: 1.3;
   color: ${({ theme }) => theme.card.basic.text};
+`;
+
+const ContentLink = styled.div`
+  border: 1px solid ${({ theme }) => theme.content.tag.blue.border};
+  background-color: ${({ theme }) => theme.content.tag.blue.background};
+  color: ${({ theme }) => theme.content.tag.blue.text};
+  padding: 5px;
+  border-radius: 5px;
+  filter: brightness(0.8);
+  transition: all 0.2s ease;
+
+  &:hover {
+    filter: none;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px -1px ${({ theme }) => theme.colors.shadow};
+  }
 `;
 
 const Description = styled.p`
@@ -295,6 +325,7 @@ const ContentMember = ({
   contentId: string;
   memberId: string;
 }) => {
+  const navigate = useNavigate();
   const { data: contentMember, isLoading } =
     useQuery<ContentMemberDetailResponse>({
       queryKey: ["content", contentId, "member", memberId],
@@ -306,6 +337,13 @@ const ContentMember = ({
     queryFn: () => getCompletedRate({ contentId, memberId }),
     retry: false,
   });
+  const { data: tmdb } = useQuery<PlatformContentResponse | null>({
+    queryKey: ["content", contentId, "platform", PlatformProvider.TMDB],
+    queryFn: () =>
+      getPlatformContentById({ platformId: PlatformProvider.TMDB, contentId }),
+    retry: false,
+  });
+
   const {
     data: infiniteReviews,
     isLoading: reviewLoading,
@@ -370,7 +408,16 @@ const ContentMember = ({
               <SeriesBadge>시리즈 · {content.series.title}</SeriesBadge>
             )}
           </SeriesBadgeArea>
-          <Title id="cmdm-title">{content.title}</Title>
+          <TitleWrapper>
+            <Title id="cmdm-title">{content.title}</Title>
+            {tmdb && (
+              <ContentLink
+                onClick={() => navigate(idInPlatformToLink(tmdb.idInPlatform))}
+              >
+                <PiMagnifyingGlassPlusBold size={18} />
+              </ContentLink>
+            )}
+          </TitleWrapper>
           <Description id="cmdm-desc">{content.description}</Description>
 
           <MetaRow>

@@ -73,3 +73,13 @@ export const formatContentSeriseLabel = (
     ContentTypeLabel[content.contentType]
   } ${content.childrenIdx}`;
 };
+
+export const idInPlatformToLink = (idInPlatform: string) => {
+  const item = idInPlatform.split("_");
+
+  if (item.length !== 2) {
+    return idInPlatform;
+  }
+
+  return `/${item[0]}s/${item[1]}`;
+};
