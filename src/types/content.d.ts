@@ -1,7 +1,8 @@
 import { ContentType } from "./contentType";
 
 export interface PlatformGenre {
-  platformId: string;
+  platformId?: string;
+  platformProvider?: string;
   idInPlatform: string;
   genre: {
     name: string;

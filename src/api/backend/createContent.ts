@@ -28,7 +28,7 @@ export const createContentMovie = async ({
       contentType: ContentType.MOVIE,
     },
     genres: data.genres.map((genre) => ({
-      platformId: platformId,
+      ...(isProvider ? { platformProvider: platformId } : { platformId }),
       idInPlatform: genre.id.toString(),
       genre: {
         name: genre.name,
@@ -60,7 +60,7 @@ export const createContentSeries = async ({
       contentType: ContentType.SERIES,
     },
     genres: data.genres.map((genre) => ({
-      platformId: platformId,
+      ...(isProvider ? { platformProvider: platformId } : { platformId }),
       idInPlatform: genre.id.toString(),
       genre: {
         name: genre.name,
@@ -97,7 +97,7 @@ export const createContentSeason = async ({
       childrenIdx: data.season_number,
     },
     genres: genres.map((genre) => ({
-      platformId,
+      ...(isProvider ? { platformProvider: platformId } : { platformId }),
       idInPlatform: genre.id.toString(),
       genre: {
         name: genre.name,
@@ -134,7 +134,7 @@ export const createContentEpisode = async ({
       childrenIdx: data.episode_number,
     },
     genres: genres.map((genre) => ({
-      platformId,
+      ...(isProvider ? { platformProvider: platformId } : { platformId }),
       idInPlatform: genre.id.toString(),
       genre: {
         name: genre.name,
