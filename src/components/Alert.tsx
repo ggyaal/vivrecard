@@ -21,6 +21,7 @@ import {
 import LoadingSpinner from "./LoadingSpinner";
 import { NotificationResponse } from "../types/notification";
 import NotificationItem from "./NotificationItem";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   position: relative;
@@ -80,7 +81,9 @@ const Alert = () => {
   >(null);
   const [newCount, setNewCount] = useState<number>(0);
   const [idx, setIdx] = useState<number | null>(null);
+  const [readed, setReaded] = useState<number | null>(null);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const { data: member } = useMember();
   const { status } = useSse({
     enabled: !!member,
@@ -119,6 +122,33 @@ const Alert = () => {
   useEffect(() => {
     if (!open) setIdx(null);
   }, [open]);
+
+  useEffect(() => {
+    if (idx !== null || readed === null || !notifications) return;
+
+    const notiSort = (a: NotificationResponse, b: NotificationResponse) => {
+      const aTime = new Date(a.createdAt);
+      const bTime = new Date(b.createdAt);
+
+      if (isNaN(aTime.getTime())) return 1;
+      if (isNaN(bTime.getTime())) return -1;
+
+      return bTime.getTime() - aTime.getTime();
+    };
+
+    const updatedNotications = [...notifications];
+    const noti = updatedNotications.splice(readed, 1);
+    if (noti.length > 0) {
+      setNotifications([
+        ...updatedNotications.filter((n) => n.readAt === null),
+        ...[
+          noti[0],
+          ...updatedNotications.filter((n) => n.readAt !== null),
+        ].sort(notiSort),
+      ]);
+    }
+    setReaded(null);
+  }, [idx, readed, notifications]);
 
   useEffect(() => {
     if (!isLoading && infiniteNotifications) {
@@ -170,7 +200,13 @@ const Alert = () => {
           icon={icon}
           hoverIcon={hoverIcon}
           size={32}
-          onClick={() => setOpen(!open)}
+          onClick={() => {
+            if (!member) {
+              navigate("/login");
+              return;
+            }
+            setOpen(!open);
+          }}
         />
         <AlertNumber $show={newCount > 0} onClick={() => setOpen(!open)}>
           {newCount > 9 ? "9+" : newCount}
@@ -210,6 +246,7 @@ const Alert = () => {
                             })
                           );
                           setNewCount(newCount - 1);
+                          setReaded(i);
                         }
                       }
                     }}

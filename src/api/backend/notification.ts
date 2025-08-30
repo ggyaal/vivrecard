@@ -12,7 +12,7 @@ export const getNotification = async ({
   signal?: AbortSignal;
 }) => {
   const res = await requestAutoRefresh<PageResponse<NotificationResponse>>({
-    path: `/api/v1/members/${memberId}/notifications?sort=createdAt,desc&size=10&read=true&${
+    path: `/api/v1/members/${memberId}/notifications?sort=readAt,desc&sort=createdAt,desc&size=10&read=true&${
       page ? `&page=${page}` : ""
     }`,
     requiredLogin: true,
