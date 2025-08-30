@@ -172,18 +172,28 @@ declare module "styled-components" {
     badge: {
       grade: {
         normal: {
+          backgrond: string;
+          border: string;
           color: string;
         };
         rare: {
+          backgrond: string;
+          border: string;
           color: string;
         };
         epic: {
+          backgrond: string;
+          border: string;
           color: string;
         };
         legendary: {
+          backgrond: string;
+          border: string;
           color: string;
         };
         mythic: {
+          backgrond: string;
+          border: string;
           color: string;
         };
       };

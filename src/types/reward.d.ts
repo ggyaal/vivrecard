@@ -1,6 +1,6 @@
 import { MemberSimpleResponse } from "./member";
 import { ActivityType } from "./activityType";
-import { DomainSimpleType, DomainType } from "./DomainType";
+import { DomainSimpleType, DomainType } from "./domainType";
 import { RewardSimpleType, RewardType } from "./rewardType";
 
 export interface RewardDetailResponse {

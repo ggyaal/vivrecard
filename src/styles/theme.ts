@@ -171,19 +171,29 @@ export const darkTheme: DefaultTheme = {
   badge: {
     grade: {
       normal: {
+        backgrond: "#3d3d3d",
+        border: "#9f9f9f",
         color: "#ddd0d0",
       },
       rare: {
-        color: "#7494f4",
+        backgrond: "#4c65b2",
+        border: "#84a0f1",
+        color: "#b0c4ff",
       },
       epic: {
-        color: "#c383ed",
+        backgrond: "#8b42bc",
+        border: "#d395fc",
+        color: "#d99fff",
       },
       legendary: {
-        color: "#c3a312",
+        backgrond: "#b39d38",
+        border: "#e6d175",
+        color: "#ffe56d",
       },
       mythic: {
-        color: "#d65c5c",
+        backgrond: "#b13939",
+        border: "#ef5f5f",
+        color: "#fe7676",
       },
     },
   },
@@ -368,19 +378,29 @@ export const lightTheme: DefaultTheme = {
   badge: {
     grade: {
       normal: {
+        backgrond: "#dedede",
+        border: "#7d7d7d",
         color: "#3c3a3a",
       },
       rare: {
-        color: "#436ce8",
+        backgrond: "#7695f4",
+        border: "#3257c8",
+        color: "#2852ce",
       },
       epic: {
-        color: "#ac2fff",
+        backgrond: "#cc80ff",
+        border: "#8634bc",
+        color: "#9625e1",
       },
       legendary: {
-        color: "#d4b218",
+        backgrond: "#fbe78b",
+        border: "#b49d36",
+        color: "#b29517",
       },
       mythic: {
-        color: "#f44242",
+        backgrond: "#f66e6e",
+        border: "#c23e3e",
+        color: "#c33131",
       },
     },
   },

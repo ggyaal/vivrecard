@@ -9,6 +9,7 @@ const requestAutoRefresh = async <T = any>({
   signal,
   requiredLogin = true,
   throwable = true,
+  noContent = false,
 }: {
   path: string;
   method?: string;
@@ -17,6 +18,7 @@ const requestAutoRefresh = async <T = any>({
   signal?: AbortSignal;
   requiredLogin?: boolean;
   throwable?: boolean;
+  noContent?: boolean;
 }): Promise<APIResponse<T>> => {
   const doFetch = async (token: string | null) => {
     return fetch(process.env.REACT_APP_API_URL + path, {
@@ -73,6 +75,8 @@ const requestAutoRefresh = async <T = any>({
     e.status = res.status;
     throw e;
   }
+
+  if (noContent) return { isSuccess: true } as APIResponse<T>;
 
   return res.json();
 };

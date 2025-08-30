@@ -2,11 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { getReward } from "../api/backend/getReward";
 import LoadingSpinner from "./LoadingSpinner";
 import styled, { css } from "styled-components";
-import { labelForDomain } from "../types/DomainType";
+import { labelForDomain } from "../types/domainType";
 import { formatRelativeTime } from "../utils/timeUtils";
 import Avatar from "./profiles/Avatar";
 import { labelForReward } from "../types/rewardType";
 import { TagColor } from "../styles/styled";
+import { BadgeGrade } from "../types/badge";
 
 const Container = styled.div`
   display: grid;
@@ -62,7 +63,7 @@ const Description = styled.p`
   max-height: 500px;
   margin: 0;
   line-height: 1.55;
-  white-space: pre;
+  white-space: break-spaces;
   overflow-y: auto;
 `;
 
@@ -113,10 +114,31 @@ const BadgeIcon = styled.img`
   font-size: 12px;
 `;
 
+const GradeBox = styled.div<{ $grade: BadgeGrade }>`
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: 1px solid
+    ${({ $grade, theme }) =>
+      theme.badge.grade[$grade.toLowerCase() as Lowercase<BadgeGrade>].border};
+  background-color: ${({ $grade, theme }) =>
+    theme.badge.grade[$grade.toLowerCase() as Lowercase<BadgeGrade>].backgrond};
+  color: ${({ $grade, theme }) =>
+    theme.badge.grade[$grade.toLowerCase() as Lowercase<BadgeGrade>].color};
+`;
+
 const KeyValue = styled.div`
   display: grid;
   gap: 4px;
   font-size: 14px;
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
   span {
     font-size: 12px;
     color: ${({ theme }) => theme.card.basic.paleText};
@@ -181,10 +203,15 @@ const RewardInfo = ({ id }: { id: string }) => {
         {reward.reward ? (
           <BadgeBox>
             <BadgeIconWrapper aria-hidden>
-              <BadgeIcon src={reward.reward?.icon} alt={reward.reward?.name} />
+              <BadgeIcon src={reward.reward?.icon} alt={reward.reward.name} />
             </BadgeIconWrapper>
             <KeyValue>
-              <strong>{reward.reward?.name ?? "Unnamed Badge"}</strong>
+              <div>
+                <GradeBox $grade={reward.reward.grade}>
+                  {reward.reward.grade}
+                </GradeBox>
+                <strong>{reward.reward?.name ?? "Unnamed Badge"}</strong>
+              </div>
               <span>{`${reward.reward.exp ?? "—"} EXP`}</span>
             </KeyValue>
           </BadgeBox>
